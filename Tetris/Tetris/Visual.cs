@@ -1,0 +1,49 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Drawing;
+
+namespace Tetris
+{
+    static class Visual
+    {
+        static public void DrawRect(Graphics grafika, Pen tuzka, string color, int width, int height)
+        {
+            width *= 35;
+            height *= 35;
+            grafika.DrawRectangle(tuzka, 1+width, 1+height, 35, 35);
+            Color colorBrush;
+            switch (color)
+            {
+                case "Red":
+                    colorBrush = Color.Red;
+                    break;
+                case "LBlue":
+                    colorBrush = Color.Turquoise;
+                    break;
+                case "Orange":
+                    colorBrush = Color.DarkOrange;
+                    break;
+                case "Green":
+                    colorBrush = Color.Lime;
+                    break;
+                case "Yellow":
+                    colorBrush = Color.Yellow;
+                    break;
+                case "DBlue":
+                    colorBrush = Color.MediumBlue;
+                    break;
+                case "Violet":
+                    colorBrush = Color.BlueViolet;
+                    break;
+                default:
+                    colorBrush = Color.LightSalmon;
+                    break;
+            }
+            SolidBrush sb = new SolidBrush(colorBrush);
+            grafika.FillRectangle(sb, 2+width, 2+height, 33, 33);
+        }
+    }
+}

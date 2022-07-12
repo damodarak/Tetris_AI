@@ -15,13 +15,23 @@ namespace Tetris
         public Form1()
         {
             InitializeComponent();
+            grafika = pictureBox1.CreateGraphics(); //vytvoreni grafiky
+            tuzka = new Pen(Color.Black, 2);//barva, sirka
         }
+        Graphics grafika;
+        Pen tuzka;
+        string[] barvy = { "Red", "Violet", "Yellow", "DBlue", "LBlue", "Green", "Orange" };
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
-            Graphics grafika = pictureBox1.CreateGraphics(); //vytvoreni grafiky
-            Pen tuzka = new Pen(Color.Aqua, 5);//barva, sirka
-            grafika.DrawLine(tuzka, 0, 0, 350, 630);//cim, odkud kam
+            Random r = new Random();
+            for (int i = 0; i < 10; i++)
+            {
+                for (int j = 0; j < 18; j++)
+                {
+                    Visual.DrawRect(grafika, tuzka, barvy[r.Next(0, 7)], i, j);
+                }
+            }
         }
     }
 }
