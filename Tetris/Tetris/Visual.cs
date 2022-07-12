@@ -44,6 +44,10 @@ namespace Tetris
             }
             SolidBrush sb = new SolidBrush(colorBrush);
             grafika.FillRectangle(sb, 2+width, 2+height, 33, 33);
+            colorBrush = Color.FromArgb(colorBrush.A, (int)(colorBrush.R * 0.8), 
+                (int)(colorBrush.G * 0.8), (int)(colorBrush.B * 0.8));
+            sb.Color = colorBrush;
+            grafika.FillRectangle(sb, 11 + width, 11 + height, 15, 15);
         }
     }
 }
