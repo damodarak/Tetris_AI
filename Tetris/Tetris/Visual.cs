@@ -9,7 +9,7 @@ namespace Tetris
 {
     static class Visual
     {
-        static public void DrawRect(Graphics grafika, Pen tuzka, string color, int width, int height)
+        static public void DrawRect(Graphics grafika, Pen tuzka, string color, int height, int width)
         {
             width *= 35;
             height *= 35;
@@ -39,7 +39,7 @@ namespace Tetris
                     colorBrush = Color.BlueViolet;
                     break;
                 default:
-                    colorBrush = Color.LightSalmon;
+                    colorBrush = Color.Black;
                     break;
             }
             SolidBrush sb = new SolidBrush(colorBrush);
