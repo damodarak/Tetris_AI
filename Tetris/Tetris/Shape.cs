@@ -10,10 +10,14 @@ namespace Tetris
     {
         string nazev;
         int[] shape;
-        public abstract bool CheckLeftSide();
-        public abstract bool CheckRightSide();
-        public abstract void RotateLeft();
-        public abstract void RotateRight();
+        public int[,] pozice;
+        int rotNum;
+        //public abstract bool CheckLeftSide();
+        //public abstract bool CheckRightSide();
+        //public abstract bool CheckUpSide();
+        public abstract bool CheckDownSide();
+        //public abstract void RotateLeft();
+        //public abstract void RotateRight();
 
     }
 }

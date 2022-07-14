@@ -22,28 +22,21 @@ namespace Tetris
         int sirka = 0;
         Graphics grafika;
         Pen tuzka;
+        Tyc t;
         string[] barvy = { "Red", "Violet", "Yellow", "DBlue", "LBlue", "Green", "Orange" };
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
             Random r = new Random();
 
-            /*
+            
             for (int i = 0; i < 18; i++)
             {
                 for (int j = 0; j < 10; j++)
                 {
                     Visual.DrawRect(grafika, tuzka, barvy[r.Next(0, 7)], i, j);
                 }
-            }*/
-            //pictureBox1.Refresh();
-            //Visual.DrawRect(grafika, tuzka, barvy[r.Next(0, 7)], r.Next(18), r.Next(10));
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            Visual.DrawRect(grafika, tuzka, "Violet", vyska, sirka);
-            button1.Enabled = false;
+            }
         }
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
@@ -51,23 +44,40 @@ namespace Tetris
             {
                 case Keys.Left:
                     sirka -= 1;
+                    pictureBox1.Refresh();
                     Visual.DrawRect(grafika, tuzka, "Violet", vyska, sirka);
                     return true;
                 case Keys.Up:
                     vyska -= 1;
+                    pictureBox1.Refresh();
                     Visual.DrawRect(grafika, tuzka, "Violet", vyska, sirka);
                     return true;
                 case Keys.Right:
                     sirka += 1;
+                    pictureBox1.Refresh();
                     Visual.DrawRect(grafika, tuzka, "Violet", vyska, sirka);
                     return true;
                 case Keys.Down:
                     vyska += 1;
+                    pictureBox1.Refresh();
                     Visual.DrawRect(grafika, tuzka, "Violet", vyska, sirka);
+                    t.MoveDown();
+                    Visual.DrawShape(t, grafika, tuzka);
                     return true;
                 default:
                     return base.ProcessCmdKey(ref msg, keyData);
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            t = new Tyc();
+            Visual.DrawShape(t, grafika, tuzka);
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
     }
 }

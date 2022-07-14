@@ -49,5 +49,13 @@ namespace Tetris
             sb.Color = colorBrush;
             grafika.FillRectangle(sb, 11 + width, 11 + height, 15, 15);
         }
+        static public void DrawShape(Shape shp, Graphics grafika, Pen tuzka)
+        {
+            dynamic tvar = shp;
+            for (int i = 0; i < 4; i++)
+            {
+                DrawRect(grafika, tuzka, "Red", tvar.pozice[i, 0], tvar.pozice[i, 1]);
+            }
+        }
     }
 }
