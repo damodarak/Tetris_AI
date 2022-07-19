@@ -43,25 +43,28 @@ namespace Tetris
             switch (keyData)
             {
                 case Keys.Left:
-                    sirka -= 1;
                     pictureBox1.Refresh();
-                    Visual.DrawRect(grafika, tuzka, "Violet", vyska, sirka);
+                    t.MoveLeft();
+                    Visual.DrawShape(t, grafika, tuzka);
                     return true;
                 case Keys.Up:
-                    vyska -= 1;
                     pictureBox1.Refresh();
-                    Visual.DrawRect(grafika, tuzka, "Violet", vyska, sirka);
+                    t.RotRight();
+                    Visual.DrawShape(t, grafika, tuzka);
                     return true;
                 case Keys.Right:
-                    sirka += 1;
                     pictureBox1.Refresh();
-                    Visual.DrawRect(grafika, tuzka, "Violet", vyska, sirka);
+                    t.MoveRight();
+                    Visual.DrawShape(t, grafika, tuzka);
                     return true;
                 case Keys.Down:
-                    vyska += 1;
                     pictureBox1.Refresh();
-                    Visual.DrawRect(grafika, tuzka, "Violet", vyska, sirka);
                     t.MoveDown();
+                    Visual.DrawShape(t, grafika, tuzka);
+                    return true;
+                case Keys.Z:
+                    pictureBox1.Refresh();
+                    t.RotLeft();
                     Visual.DrawShape(t, grafika, tuzka);
                     return true;
                 default:

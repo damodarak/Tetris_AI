@@ -14,10 +14,12 @@ namespace Tetris
         int rotNum;
         //public abstract bool CheckLeftSide();
         //public abstract bool CheckRightSide();
-        //public abstract bool CheckUpSide();
-        public abstract bool CheckDownSide();
-        //public abstract void RotateLeft();
-        //public abstract void RotateRight();
+        //public abstract bool CheckDownSide();
+        public abstract void MoveDown();
+        public abstract void MoveLeft();
+        public abstract void MoveRight();
+        public abstract void RotLeft();
+        public abstract void RotRight();
 
     }
 }

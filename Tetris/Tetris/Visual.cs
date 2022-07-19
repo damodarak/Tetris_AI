@@ -54,7 +54,7 @@ namespace Tetris
             dynamic tvar = shp;
             for (int i = 0; i < 4; i++)
             {
-                DrawRect(grafika, tuzka, "Red", tvar.pozice[i, 0], tvar.pozice[i, 1]);
+                DrawRect(grafika, tuzka, tvar.color, tvar.pozice[i, 0], tvar.pozice[i, 1]);
             }
         }
     }
