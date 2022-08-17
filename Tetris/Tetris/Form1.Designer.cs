@@ -39,6 +39,8 @@ namespace Tetris
             // 
             this.pictureBox1.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.pictureBox1.Location = new System.Drawing.Point(120, 50);
+            this.pictureBox1.MaximumSize = new System.Drawing.Size(352, 632);
+            this.pictureBox1.MinimumSize = new System.Drawing.Size(352, 632);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(352, 632);
             this.pictureBox1.TabIndex = 0;
@@ -73,6 +75,9 @@ namespace Tetris
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.pictureBox1);
+            this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(910, 746);
+            this.MinimumSize = new System.Drawing.Size(910, 746);
             this.Name = "Form1";
             this.Text = "TetMFFris";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
