@@ -18,11 +18,10 @@ namespace Tetris
             grafika = pictureBox1.CreateGraphics(); //vytvoreni grafiky
             tuzka = new Pen(Color.Black, 2);//barva, sirka
         }
-        int vyska = 0;
-        int sirka = 0;
         Graphics grafika;
         Pen tuzka;
-        Tyc t;
+        Shape activePiece;
+        GameBoard gb;
         string[] barvy = { "Red", "Violet", "Yellow", "DBlue", "LBlue", "Green", "Orange" };
 
         private void pictureBox1_Click(object sender, EventArgs e)
@@ -44,28 +43,30 @@ namespace Tetris
             {
                 case Keys.Left:
                     pictureBox1.Refresh();
-                    t.MoveLeft();
-                    Visual.DrawShape(t, grafika, tuzka);
+                    activePiece.MoveLeft(ref gb);
+                    Visual.DrawShape(activePiece, grafika, tuzka);
                     return true;
                 case Keys.Up:
                     pictureBox1.Refresh();
-                    t.RotRight();
-                    Visual.DrawShape(t, grafika, tuzka);
+                    activePiece.RotRight();
+                    Visual.DrawShape(activePiece, grafika, tuzka);
                     return true;
                 case Keys.Right:
                     pictureBox1.Refresh();
-                    t.MoveRight();
-                    Visual.DrawShape(t, grafika, tuzka);
+                    activePiece.MoveRight(ref gb);
+                    Visual.DrawShape(activePiece, grafika, tuzka);
                     return true;
                 case Keys.Down:
+                    timer1.Enabled = false;
                     pictureBox1.Refresh();
-                    t.MoveDown();
-                    Visual.DrawShape(t, grafika, tuzka);
+                    activePiece.MoveDown();
+                    Visual.DrawShape(activePiece, grafika, tuzka);
+                    timer1.Enabled = true;
                     return true;
                 case Keys.Z:
                     pictureBox1.Refresh();
-                    t.RotLeft();
-                    Visual.DrawShape(t, grafika, tuzka);
+                    activePiece.RotLeft();
+                    Visual.DrawShape(activePiece, grafika, tuzka);
                     return true;
                 default:
                     return base.ProcessCmdKey(ref msg, keyData);
@@ -74,13 +75,23 @@ namespace Tetris
 
         private void button1_Click(object sender, EventArgs e)
         {
-            t = new Tyc();
-            Visual.DrawShape(t, grafika, tuzka);
+            //t = new Tyc();
+            activePiece = new Tyc();
+            Visual.DrawShape(activePiece, grafika, tuzka);
+            gb = new GameBoard();
+            timer1.Enabled = true;
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            pictureBox1.Refresh();
+            activePiece.MoveDown();
+            Visual.DrawShape(activePiece, grafika, tuzka);
         }
     }
 }

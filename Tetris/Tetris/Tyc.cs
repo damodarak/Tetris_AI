@@ -8,15 +8,16 @@ namespace Tetris
 {
     class Tyc : Shape
     {
-        string nazev = "Tyc";
+        private string nazev = "Tyc";
         public string color = "Orange";
+        public char letterShape = 'I';
         public int[,] pozice;
-        int rotNum = 0;
+        private int rotNum = 0;
         public Tyc()
         {
             pozice = new int[4, 2] { { 0, 3, }, { 0, 4 }, { 0, 5 }, { 0, 6 } };
         }
-        private  bool CheckDownSide()
+        private bool checkDownSide()
         {
             if (rotNum == 0)
             {
@@ -41,9 +42,67 @@ namespace Tetris
                 }
             }
         }
+        private bool checkLeftSide(ref GameBoard gb)
+        {
+            if (rotNum==0)
+            {
+                if (pozice[0,1] != 0 && gb.Board[pozice[0,0],pozice[0,1]-1] == '\0')
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                if (pozice[0,1] == 0)
+                {
+                    return false;
+                }
+                for (int i = 0; i < 4; i++)
+                {
+                    if (gb.Board[pozice[i,0],pozice[i,1]-1] != '\0')
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
+        private bool checkRightSide(ref GameBoard gb)
+        {
+            if (rotNum == 0)
+            {
+                if (pozice[3, 1] != 9 && gb.Board[pozice[3, 0], pozice[3, 1] + 1] == '\0')
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                if (pozice[3, 1] == 9)
+                {
+                    return false;
+                }
+                for (int i = 0; i < 4; i++)
+                {
+                    if (gb.Board[pozice[i, 0], pozice[i, 1] + 1] != '\0')
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
         public override void MoveDown()
         {
-            if (CheckDownSide())
+            if (checkDownSide())
             {
                 for (int i = 0; i < 4; i++)
                 {
@@ -51,18 +110,24 @@ namespace Tetris
                 }
             }
         }
-        public override void MoveLeft()
+        public override void MoveLeft(ref GameBoard gb)
         {
-            for (int i = 0; i < 4; i++)
+            if (checkLeftSide(ref gb))
             {
-                pozice[i, 1] -= 1;
+                for (int i = 0; i < 4; i++)
+                {
+                    pozice[i, 1] -= 1;
+                }
             }
         }
-        public override void MoveRight()
+        public override void MoveRight(ref GameBoard gb)
         {
-            for (int i = 0; i < 4; i++)
+            if (checkRightSide(ref gb))
             {
-                pozice[i, 1] += 1;
+                for (int i = 0; i < 4; i++)
+                {
+                    pozice[i, 1] += 1;
+                }
             }
         }
         public override void RotRight()
