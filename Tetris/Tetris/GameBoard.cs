@@ -12,13 +12,14 @@ namespace Tetris
         public char[,] Board;
         public GameBoard()
         {
-            Board = new char[18, 10];
+            Board = new char[20, 10];
         }
-        public void AddToBoard(int[,] blocksLoc, char color)
+        public void AddToBoard(Shape shp)
         {
+            dynamic tvar = shp;
             for (int i = 0; i < 4; i++)
             {
-                Board[blocksLoc[i, 0], blocksLoc[i, 1]] = color;
+                Board[tvar.Pozice[i, 0], tvar.Pozice[i, 1]] = tvar.Color;
             }
         }
     }

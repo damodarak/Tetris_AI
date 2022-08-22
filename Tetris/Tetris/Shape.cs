@@ -8,15 +8,14 @@ namespace Tetris
 {
     abstract class Shape
     {
-        string nazev;
-        int[] shape;
-        public int[,] pozice;
-        int rotNum;
-        public abstract void MoveDown();
+        private string nazev;
+        public int[,] Pozice;
+        private int rotNum;
+        public abstract bool MoveDown(ref GameBoard gb);
         public abstract void MoveLeft(ref GameBoard gb);
         public abstract void MoveRight(ref GameBoard gb);
-        public abstract void RotLeft();
-        public abstract void RotRight();
+        public abstract void RotLeft(ref GameBoard gb);
+        public abstract void RotRight(ref GameBoard gb);
 
     }
 }

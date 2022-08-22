@@ -9,33 +9,37 @@ namespace Tetris
 {
     static class Visual
     {
-        static public void DrawRect(Graphics grafika, Pen tuzka, string color, int height, int width)
+        static public void DrawRect(Graphics grafika, Pen tuzka, char color, int height, int width)
         {
+            if (color == '\0')
+            {
+                return;
+            }
             width *= 35;
             height *= 35;
             grafika.DrawRectangle(tuzka, 1+width, 1+height, 35, 35);
             Color colorBrush;
             switch (color)
             {
-                case "Red":
+                case 'R':
                     colorBrush = Color.Red;
                     break;
-                case "LBlue":
+                case 'L':
                     colorBrush = Color.Turquoise;
                     break;
-                case "Orange":
+                case 'O':
                     colorBrush = Color.DarkOrange;
                     break;
-                case "Green":
+                case 'G':
                     colorBrush = Color.Lime;
                     break;
-                case "Yellow":
+                case 'Y':
                     colorBrush = Color.Yellow;
                     break;
-                case "DBlue":
+                case 'D':
                     colorBrush = Color.MediumBlue;
                     break;
-                case "Violet":
+                case 'V':
                     colorBrush = Color.BlueViolet;
                     break;
                 default:
@@ -54,8 +58,23 @@ namespace Tetris
             dynamic tvar = shp;
             for (int i = 0; i < 4; i++)
             {
-                DrawRect(grafika, tuzka, tvar.color, tvar.pozice[i, 0], tvar.pozice[i, 1]);
+                DrawRect(grafika, tuzka, tvar.Color, tvar.Pozice[i, 0] - 2, tvar.Pozice[i, 1]);
             }
+        }
+        static public void DrawMap(ref GameBoard gb, Graphics grafika, Pen tuzka)
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    DrawRect(grafika, tuzka, gb.Board[i, j], i-2, j);
+                }
+            }
+        }
+        static public void DrawGame(ref GameBoard gb, Shape shp, Graphics grafika, Pen tuzka)
+        {
+            DrawMap(ref gb, grafika, tuzka);
+            DrawShape(shp, grafika, tuzka);
         }
     }
 }
