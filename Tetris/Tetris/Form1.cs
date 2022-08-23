@@ -15,48 +15,46 @@ namespace Tetris
         public Form1()
         {
             InitializeComponent();
-            grafika = pictureBox1.CreateGraphics(); //vytvoreni grafiky
             tuzka = new Pen(Color.Black, 2);//barva, sirka
         }
-        Graphics grafika;
         Pen tuzka;
         Shape activePiece;
         GameBoard gb;
-        Image img;
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
+            if (activePiece==null)
+            {
+                return base.ProcessCmdKey(ref msg, keyData);
+            }
             switch (keyData)
             {
+                case Keys.Space:
+                    return true;
                 case Keys.Left:
-                    pictureBox1.Refresh();
+                    pictureBox1.Invalidate();
                     activePiece.MoveLeft(ref gb);
-                    Visual.DrawGame(ref gb, activePiece, grafika, tuzka);
                     return true;
                 case Keys.Up:
-                    pictureBox1.Refresh();
+                    pictureBox1.Invalidate();
                     activePiece.RotRight(ref gb);
-                    Visual.DrawGame(ref gb, activePiece, grafika, tuzka);
                     return true;
                 case Keys.Right:
-                    pictureBox1.Refresh();
+                    pictureBox1.Invalidate();
                     activePiece.MoveRight(ref gb);
-                    Visual.DrawGame(ref gb, activePiece, grafika, tuzka);
                     return true;
                 case Keys.Down:
                     timer1.Enabled = false;
-                    pictureBox1.Refresh();
+                    pictureBox1.Invalidate();
                     if (!activePiece.MoveDown(ref gb))
                     {
                         gb.AddToBoard(activePiece);
-                        activePiece = new Ctverec();
+                        activePiece = new Esko();
                     }
-                    Visual.DrawGame(ref gb, activePiece, grafika, tuzka);
                     timer1.Enabled = true;
                     return true;
                 case Keys.Z:
-                    pictureBox1.Refresh();
+                    pictureBox1.Invalidate();
                     activePiece.RotLeft(ref gb);
-                    Visual.DrawGame(ref gb, activePiece, grafika, tuzka);
                     return true;
                 default:
                     return base.ProcessCmdKey(ref msg, keyData);
@@ -65,8 +63,8 @@ namespace Tetris
 
         private void button1_Click(object sender, EventArgs e)
         {
-            activePiece = new Ctverec();
-            Visual.DrawShape(activePiece, grafika, tuzka);
+            activePiece = new Esko();
+            pictureBox1.Invalidate();
             gb = new GameBoard();
             timer1.Enabled = true;
         }
@@ -77,13 +75,24 @@ namespace Tetris
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            pictureBox1.Refresh();
+            pictureBox1.Invalidate();
             if(!activePiece.MoveDown(ref gb))
             {
                 gb.AddToBoard(activePiece);
-                activePiece = new Ctverec();
+                activePiece = new Esko();
             }
-            Visual.DrawGame(ref gb, activePiece, grafika, tuzka);
+        }
+
+        private void pictureBox1_Paint(object sender, PaintEventArgs e)
+        {
+            if (activePiece==null)
+            {
+                return;
+            }
+            else
+            {
+                Visual.DrawGame(ref gb, activePiece, e.Graphics, tuzka);
+            }
         }
     }
 }

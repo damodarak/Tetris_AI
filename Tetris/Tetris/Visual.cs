@@ -11,16 +11,11 @@ namespace Tetris
     {
         static public void DrawRect(Graphics grafika, Pen tuzka, char color, int height, int width)
         {
-            if (color == '\0')
-            {
-                return;
-            }
-            width *= 35;
-            height *= 35;
-            grafika.DrawRectangle(tuzka, 1+width, 1+height, 35, 35);
             Color colorBrush;
             switch (color)
             {
+                case '\0':
+                    return;
                 case 'R':
                     colorBrush = Color.Red;
                     break;
@@ -46,6 +41,9 @@ namespace Tetris
                     colorBrush = Color.Black;
                     break;
             }
+            width *= 35;
+            height *= 35;
+            grafika.DrawRectangle(tuzka, 1 + width, 1 + height, 35, 35);
             SolidBrush sb = new SolidBrush(colorBrush);
             grafika.FillRectangle(sb, 2+width, 2+height, 33, 33);
             colorBrush = Color.FromArgb(colorBrush.A, (int)(colorBrush.R * 0.8), 

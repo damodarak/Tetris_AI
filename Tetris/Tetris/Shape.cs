@@ -10,7 +10,7 @@ namespace Tetris
     {
         private string nazev;
         public int[,] Pozice;
-        private int rotNum;
+        public char Color;
         public abstract bool MoveDown(ref GameBoard gb);
         public abstract void MoveLeft(ref GameBoard gb);
         public abstract void MoveRight(ref GameBoard gb);

@@ -6,26 +6,30 @@ using System.Threading.Tasks;
 
 namespace Tetris
 {
-    class Tyc : Shape
+    class Tecko : Shape
     {
-        private string nazev = "Tyc";
-        new public char Color = 'O';
+        private string nazev = "Tecko";
+        new public char Color = 'Y';
         new public int[,] Pozice;
-        private int rotNum;
-        public Tyc()
+        private int[] stred;
+        private int[,] poziceDiry;
+        int rotNum;
+        public Tecko()
         {
-            Pozice = new int[4, 2] { { 2, 3, }, { 2, 4 }, { 2, 5 }, { 2, 6 } };
+            Pozice = new int[4, 2] { { 2, 4 }, { 2, 3, }, { 2, 5 }, { 3, 4 } };
+            stred = new int[2] { 2, 4 };
+            poziceDiry = new int[4, 2] { { -1, 0 }, { 0, 1 }, { 1, 0 }, { 0, -1 } };
             rotNum = 0;
         }
         private bool checkDownSide(ref GameBoard gb)
         {
             return (
-                Pozice[0, 0] != 19 && Pozice[1, 0] != 19 &&
-                Pozice[2, 0] != 19 && Pozice[3, 0] != 19 &&
-                gb.Board[Pozice[0, 0] + 1, Pozice[0, 1]] == '\0' &&
-                gb.Board[Pozice[1, 0] + 1, Pozice[1, 1]] == '\0' &&
-                gb.Board[Pozice[2, 0] + 1, Pozice[2, 1]] == '\0' &&
-                gb.Board[Pozice[3, 0] + 1, Pozice[3, 1]] == '\0');
+                Pozice[0,0] != 19 && Pozice[1,0] != 19 &&
+                Pozice[2,0] != 19 && Pozice[3,0] != 19 &&
+                gb.Board[Pozice[0,0] + 1, Pozice[0,1]] == '\0' &&
+                gb.Board[Pozice[1,0] + 1, Pozice[1,1]] == '\0' &&
+                gb.Board[Pozice[2,0] + 1, Pozice[2,1]] == '\0' &&
+                gb.Board[Pozice[3,0] + 1, Pozice[3,1]] == '\0');
         }
         private bool checkLeftSide(ref GameBoard gb)
         {
@@ -45,20 +49,12 @@ namespace Tetris
                 gb.Board[Pozice[0, 0], Pozice[0, 1] + 1] == '\0' &&
                 gb.Board[Pozice[1, 0], Pozice[1, 1] + 1] == '\0' &&
                 gb.Board[Pozice[2, 0], Pozice[2, 1] + 1] == '\0' &&
-                gb.Board[Pozice[3, 0], Pozice[3, 1] + 1] == '\0');        
+                gb.Board[Pozice[3, 0], Pozice[3, 1] + 1] == '\0');
         }
-        private bool checkRotZero(ref GameBoard gb)
+        private bool checkRot(ref GameBoard gb)
         {
-            return (Pozice[0,0] < 18 && gb.Board[Pozice[0, 0] - 1, Pozice[0, 1] + 1] == '\0' &&
-                gb.Board[Pozice[2, 0] + 1, Pozice[2, 1] - 1] == '\0' &&
-                gb.Board[Pozice[3, 0] + 2, Pozice[3, 1] - 2] == '\0');
-        }
-        private bool checkRotOne(ref GameBoard gb)
-        {
-            return (Pozice[0, 1] > 0 && Pozice[3, 1] < 8 &&
-                gb.Board[Pozice[0, 0] + 1, Pozice[0, 1] - 1] == '\0' &&
-                gb.Board[Pozice[2, 0] - 1, Pozice[2, 1] + 1] == '\0' &&
-                gb.Board[Pozice[3, 0] - 2, Pozice[3, 1] + 2] == '\0');
+            return (stred[1] != 0 && stred[1] != 9 && stred[0] != 19 &&
+                gb.Board[stred[0] + poziceDiry[rotNum, 0], stred[1] + poziceDiry[rotNum, 1]] == '\0');
         }
         public override bool MoveDown(ref GameBoard gb)
         {
@@ -68,6 +64,7 @@ namespace Tetris
                 {
                     Pozice[i, 0] += 1;
                 }
+                stred[0] += 1;
                 return true;
             }
             else
@@ -83,6 +80,7 @@ namespace Tetris
                 {
                     Pozice[i, 1] -= 1;
                 }
+                stred[1] -= 1;
             }
         }
         public override void MoveRight(ref GameBoard gb)
@@ -93,40 +91,33 @@ namespace Tetris
                 {
                     Pozice[i, 1] += 1;
                 }
+                stred[1] += 1;
             }
         }
         public override void RotRight(ref GameBoard gb)
         {
-            if (rotNum == 0 && checkRotZero(ref gb))
+            if (checkRot(ref gb))
             {
-                rotNum = 1;
-
-                Pozice[0, 0] -= 1;
-                Pozice[0, 1] += 1;
-
-                Pozice[2, 0] += 1;
-                Pozice[2, 1] -= 1;
-
-                Pozice[3, 0] += 2;
-                Pozice[3, 1] -= 2;
+                rotNum = (++rotNum) % 4;
+                for (int i = 1; i < 4; i++)
+                {
+                    Pozice[i, 0] = stred[0] + poziceDiry[(rotNum +i ) % 4, 0];
+                    Pozice[i, 1] = stred[1] + poziceDiry[(rotNum + i) % 4, 1];
+                }
             }
-            else if(rotNum == 1 && checkRotOne(ref gb))
-            {
-                rotNum = 0;
 
-                Pozice[0, 0] += 1;
-                Pozice[0, 1] -= 1;
-
-                Pozice[2, 0] -= 1;
-                Pozice[2, 1] += 1;
-
-                Pozice[3, 0] -= 2;
-                Pozice[3, 1] += 2;
-            }
         }
         public override void RotLeft(ref GameBoard gb)
         {
-            RotRight(ref gb);
+            if (checkRot(ref gb))
+            {
+                rotNum = (rotNum + 3) % 4;
+                for (int i = 1; i < 4; i++)
+                {
+                    Pozice[i, 0] = stred[0] + poziceDiry[(rotNum + i) % 4, 0];
+                    Pozice[i, 1] = stred[1] + poziceDiry[(rotNum + i) % 4, 1];
+                }
+            }
         }
     }
 }
