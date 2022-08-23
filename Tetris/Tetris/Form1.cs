@@ -48,7 +48,7 @@ namespace Tetris
                     if (!activePiece.MoveDown(ref gb))
                     {
                         gb.AddToBoard(activePiece);
-                        activePiece = new Esko();
+                        activePiece = GameBoard.GeneratePiece();
                     }
                     timer1.Enabled = true;
                     return true;
@@ -63,7 +63,7 @@ namespace Tetris
 
         private void button1_Click(object sender, EventArgs e)
         {
-            activePiece = new Esko();
+            activePiece = GameBoard.GeneratePiece();
             pictureBox1.Invalidate();
             gb = new GameBoard();
             timer1.Enabled = true;
@@ -79,7 +79,7 @@ namespace Tetris
             if(!activePiece.MoveDown(ref gb))
             {
                 gb.AddToBoard(activePiece);
-                activePiece = new Esko();
+                activePiece = GameBoard.GeneratePiece();
             }
         }
 
