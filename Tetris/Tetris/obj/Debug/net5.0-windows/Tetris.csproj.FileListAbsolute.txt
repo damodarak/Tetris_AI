@@ -34,3 +34,4 @@ C:\Users\uzivatel\source\repos\student-kroupad1\Tetris\Tetris\obj\Debug\net5.0-w
 C:\Users\uzivatel\source\repos\student-kroupad1\Tetris\Tetris\obj\Debug\net5.0-windows\ref\Tetris.dll
 C:\Users\uzivatel\source\repos\student-kroupad1\Tetris\Tetris\obj\Debug\net5.0-windows\Tetris.pdb
 C:\Users\uzivatel\source\repos\student-kroupad1\Tetris\Tetris\obj\Debug\net5.0-windows\Tetris.genruntimeconfig.cache
+C:\Users\uzivatel\source\repos\student-kroupad1\Tetris\Tetris\obj\Debug\net5.0-windows\Tetris.Properties.Resources.resources

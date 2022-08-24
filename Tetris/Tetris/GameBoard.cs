@@ -12,9 +12,17 @@ namespace Tetris
         static int numOfPieces = 0;
         static int[] piecesDistribution = new int[7];
         public char[,] Board;
+        public int lines;
+        public int level;
+        public int score;
+        private int[] points;
         public GameBoard()
         {
             Board = new char[20, 10];
+            lines = 0;
+            level = 1;
+            score = 0;
+            points = new int[5] { 0, 40, 100, 300, 1200 };
         }
         public void AddToBoard(Shape shp)
         {
@@ -72,6 +80,46 @@ namespace Tetris
                     ++piecesDistribution[cis];
                     return new Tyc();
             }
+        }
+        public int[] FindFullLines(Shape shp)
+        {
+            dynamic tvar = shp;
+            int[] konec = new int[5];
+            int j;
+            for (int i = 0; i < 4; i++)
+            {
+                for (j = 0; j < 10; j++)
+                {
+                    if (this.Board[tvar.Pozice[i,0],j] == '\0')
+                    {
+                        break;
+                    }
+                }
+                if (j==10 && !contains(konec,tvar.Pozice[i,0]))
+                {
+                    konec[konec[4]] = tvar.Pozice[i, 0];
+                    ++konec[4];                   
+                }
+            }
+            updateInfo(konec[4]);
+            return konec;
+        }
+        private bool contains(int[] kde, int co)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                if (kde[i] == co)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        private void updateInfo(int numLines)
+        {
+            score += points[numLines] * level;
+            lines += numLines;
+            level = (lines / 10) + 1;           
         }
     }
 }

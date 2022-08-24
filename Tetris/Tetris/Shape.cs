@@ -16,6 +16,6 @@ namespace Tetris
         public abstract void MoveRight(ref GameBoard gb);
         public abstract void RotLeft(ref GameBoard gb);
         public abstract void RotRight(ref GameBoard gb);
-
+        public abstract int HardDrop(ref GameBoard gb);
     }
 }

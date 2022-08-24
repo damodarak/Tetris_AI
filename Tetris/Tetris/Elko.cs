@@ -134,5 +134,14 @@ namespace Tetris
                 rotNum *= -1;
             }
         }
+        public override int HardDrop(ref GameBoard gb)
+        {
+            int pocet = 0;
+            while (MoveDown(ref gb))
+            {
+                ++pocet;
+            }
+            return pocet;
+        }
     }
 }
