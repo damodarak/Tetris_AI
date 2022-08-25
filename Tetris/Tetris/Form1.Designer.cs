@@ -165,6 +165,7 @@ namespace Tetris
             // Form1
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
             this.ClientSize = new System.Drawing.Size(894, 707);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);

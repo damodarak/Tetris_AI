@@ -23,6 +23,7 @@ namespace Tetris
         Shape nextPiece;
         GameBoard gb;
         int[] clearLines;
+        bool gameOver;
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             if (activePiece==null)
@@ -67,14 +68,14 @@ namespace Tetris
         }
         private void updateInfo()
         {
-            int level = (gb.lines / 10) + 1;
-            label4.Text = level.ToString();
+            label4.Text = gb.level.ToString();
             label5.Text = gb.score.ToString();
             label6.Text = gb.lines.ToString();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
+            clearLines = new int[5];
             timer1.Enabled = false;
             activePiece = GameBoard.GeneratePiece();
             nextPiece = GameBoard.GeneratePiece();
@@ -83,6 +84,7 @@ namespace Tetris
             gb = new GameBoard();
             updateInfo();
             timer1.Enabled = true;
+            gameOver = false;
         }
         private void button2_Click(object sender, EventArgs e)
         {
@@ -108,18 +110,25 @@ namespace Tetris
             pictureBox3.Invalidate();
             if (!activePiece.MoveDown(ref gb))
             {
-                gb.AddToBoard(activePiece);
-                clearLines = gb.FindFullLines(activePiece);
-                if (clearLines[4] != 0)
+                if (gb.AddToBoard(activePiece))
+                {
+                    clearLines = gb.FindFullLines(activePiece);
+                    if (clearLines[4] != 0)
+                    {
+                        timer1.Enabled = false;
+                        timer1.Interval = 200;
+                        GameBoard.ClearLines(ref gb, clearLines);
+                        timer1.Enabled = true;
+                    }
+                    activePiece = nextPiece;
+                    nextPiece = GameBoard.GeneratePiece();
+                    updateInfo();
+                }
+                else
                 {
                     timer1.Enabled = false;
-                    timer1.Interval = 200;
-                    Visual.ClearLines(ref gb, clearLines);
-                    timer1.Enabled = true;
+                    gameOver = true;
                 }
-                activePiece = nextPiece;
-                nextPiece = GameBoard.GeneratePiece();
-                updateInfo();
             }
         }
 
@@ -128,6 +137,11 @@ namespace Tetris
             if (activePiece==null)
             {
                 return;
+            }
+            else if (gameOver)
+            {
+                Visual.DrawGame(ref gb, activePiece, e.Graphics, tuzka);
+                e.Graphics.DrawImage(Properties.Resources.gover, 0, 150, 352, 200);
             }
             else
             {

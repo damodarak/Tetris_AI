@@ -24,13 +24,21 @@ namespace Tetris
             score = 0;
             points = new int[5] { 0, 40, 100, 300, 1200 };
         }
-        public void AddToBoard(Shape shp)
+        public bool AddToBoard(Shape shp)
         {
             dynamic tvar = shp;
             for (int i = 0; i < 4; i++)
             {
-                Board[tvar.Pozice[i, 0], tvar.Pozice[i, 1]] = tvar.Color;
+                if (Board[tvar.Pozice[i, 0], tvar.Pozice[i, 1]] == '\0')
+                {
+                    Board[tvar.Pozice[i, 0], tvar.Pozice[i, 1]] = tvar.Color;
+                }
+                else
+                {
+                    return false;
+                }
             }
+            return true;
         }
         static public Shape GeneratePiece()
         {
@@ -131,6 +139,16 @@ namespace Tetris
                     {
                         gb.Board[j, k] = gb.Board[j - 1, k];
                     }
+                }
+            }
+        }
+        static public void ClearLines(ref GameBoard gb, int[] lines)
+        {
+            for (int i = 0; i < lines[4]; i++)
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    gb.Board[lines[i], j] = '\0';
                 }
             }
         }

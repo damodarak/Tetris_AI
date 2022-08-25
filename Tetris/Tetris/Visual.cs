@@ -83,15 +83,5 @@ namespace Tetris
                 DrawRect(grafika, tuzka, tvar.Color, tvar.Pozice[i, 0] - 1, tvar.Pozice[i, 1]-2);
             }
         }
-        static public void ClearLines(ref GameBoard gb, int[] lines)
-        {
-            for (int i = 0; i < lines[4]; i++)
-            {
-                for (int j = 0; j < 10; j++)
-                {
-                    gb.Board[lines[i], j] = '\0';
-                }
-            }
-        }
     }
 }
