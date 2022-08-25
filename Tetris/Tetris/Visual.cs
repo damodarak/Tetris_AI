@@ -7,6 +7,7 @@ using System.Drawing;
 
 namespace Tetris
 {
+    //proc nemuze byt tato classa static public???
     static class Visual
     {
         static public void DrawRect(Graphics grafika, Pen tuzka, char color, int height, int width)
@@ -73,6 +74,24 @@ namespace Tetris
         {
             DrawMap(ref gb, grafika, tuzka);
             DrawShape(shp, grafika, tuzka);
+        }
+        static public void DrawNextPiece(Shape shp, Graphics grafika, Pen tuzka)
+        {
+            dynamic tvar = shp;
+            for (int i = 0; i < 4; i++)
+            {
+                DrawRect(grafika, tuzka, tvar.Color, tvar.Pozice[i, 0] - 1, tvar.Pozice[i, 1]-2);
+            }
+        }
+        static public void ClearLines(ref GameBoard gb, int[] lines)
+        {
+            for (int i = 0; i < lines[4]; i++)
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    gb.Board[lines[i], j] = '\0';
+                }
+            }
         }
     }
 }

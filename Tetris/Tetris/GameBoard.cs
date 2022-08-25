@@ -121,5 +121,18 @@ namespace Tetris
             lines += numLines;
             level = (lines / 10) + 1;           
         }
+        static public void MoveMap(ref GameBoard gb, int[] lines)
+        {
+            for (int i = 0; i < lines[4]; i++)
+            {
+                for (int j = lines[i]; j > 0; j--)
+                {
+                    for (int k = 0; k < 10; k++)
+                    {
+                        gb.Board[j, k] = gb.Board[j - 1, k];
+                    }
+                }
+            }
+        }
     }
 }

@@ -27,6 +27,13 @@ namespace Tetris
         {
             return (Pozice[3, 1] != 9 && gb.Board[Pozice[1, 0], Pozice[1, 1] + 1] == '\0' && gb.Board[Pozice[3, 0], Pozice[3, 1] + 1] == '\0');
         }
+        public override void MoveUp()
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                Pozice[i, 0] -= 1;
+            }
+        }
         public override bool MoveDown(ref GameBoard gb)
         {
             if (checkDownSide(ref gb))

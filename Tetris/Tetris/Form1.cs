@@ -16,10 +16,13 @@ namespace Tetris
         {
             InitializeComponent();
             tuzka = new Pen(Color.Black, 2);//barva, sirka
+            clearLines = new int[5];
         }
         Pen tuzka;
         Shape activePiece;
+        Shape nextPiece;
         GameBoard gb;
+        int[] clearLines;
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             if (activePiece==null)
@@ -28,6 +31,10 @@ namespace Tetris
             }
             switch (keyData)
             {
+                case Keys.W:
+                    pictureBox1.Invalidate();
+                    activePiece.MoveUp();
+                    return true;
                 case Keys.Space:
                     pictureBox1.Invalidate();
                     gb.score += activePiece.HardDrop(ref gb);
@@ -68,8 +75,11 @@ namespace Tetris
 
         private void button1_Click(object sender, EventArgs e)
         {
+            timer1.Enabled = false;
             activePiece = GameBoard.GeneratePiece();
+            nextPiece = GameBoard.GeneratePiece();
             pictureBox1.Invalidate();
+            pictureBox3.Invalidate();
             gb = new GameBoard();
             updateInfo();
             timer1.Enabled = true;
@@ -81,16 +91,34 @@ namespace Tetris
 
         private void timer1_Tick(object sender, EventArgs e)
         {
+            if (timer1.Interval == 200)
+            {
+                pictureBox1.Invalidate();
+                pictureBox3.Invalidate();
+                timer1.Enabled = false;
+                GameBoard.MoveMap(ref gb, clearLines);
+                timer1.Interval = 500;
+                timer1.Enabled = true;
+            }
             move(ref gb);
         }
         private void move(ref GameBoard gb)
         {
             pictureBox1.Invalidate();
+            pictureBox3.Invalidate();
             if (!activePiece.MoveDown(ref gb))
             {
                 gb.AddToBoard(activePiece);
-                gb.FindFullLines(activePiece);
-                activePiece = GameBoard.GeneratePiece();
+                clearLines = gb.FindFullLines(activePiece);
+                if (clearLines[4] != 0)
+                {
+                    timer1.Enabled = false;
+                    timer1.Interval = 200;
+                    Visual.ClearLines(ref gb, clearLines);
+                    timer1.Enabled = true;
+                }
+                activePiece = nextPiece;
+                nextPiece = GameBoard.GeneratePiece();
                 updateInfo();
             }
         }
@@ -111,6 +139,18 @@ namespace Tetris
         {
             Graphics g = e.Graphics;
             g.DrawImage(Properties.Resources.tetris, 0, 0, 260, 90);
+        }
+
+        private void pictureBox3_Paint(object sender, PaintEventArgs e)
+        {
+            if (nextPiece==null)
+            {
+                return;
+            }
+            else
+            {
+                Visual.DrawNextPiece(nextPiece, e.Graphics, tuzka);
+            }
         }
     }
 }

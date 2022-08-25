@@ -56,6 +56,14 @@ namespace Tetris
             return (stred[1] != 0 && stred[1] != 9 && stred[0] != 19 &&
                 gb.Board[stred[0] + poziceDiry[rotNum, 0], stred[1] + poziceDiry[rotNum, 1]] == '\0');
         }
+        public override void MoveUp()
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                Pozice[i, 0] -= 1;
+            }
+            stred[0] -= 1;
+        }
         public override bool MoveDown(ref GameBoard gb)
         {
             if (checkDownSide(ref gb))
