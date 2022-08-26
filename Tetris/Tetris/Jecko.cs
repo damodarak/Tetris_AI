@@ -24,36 +24,6 @@ namespace Tetris
             rotNum = 1;
             rotHackNum = 0;
         }
-        private bool checkDownSide(ref GameBoard gb)
-        {
-            return (
-                Pozice[0, 0] != 19 && Pozice[1, 0] != 19 &&
-                Pozice[2, 0] != 19 && Pozice[3, 0] != 19 &&
-                gb.Board[Pozice[0, 0] + 1, Pozice[0, 1]] == '\0' &&
-                gb.Board[Pozice[1, 0] + 1, Pozice[1, 1]] == '\0' &&
-                gb.Board[Pozice[2, 0] + 1, Pozice[2, 1]] == '\0' &&
-                gb.Board[Pozice[3, 0] + 1, Pozice[3, 1]] == '\0');
-        }
-        private bool checkLeftSide(ref GameBoard gb)
-        {
-            return (
-                Pozice[0, 1] != 0 && Pozice[1, 1] != 0 &&
-                Pozice[2, 1] != 0 && Pozice[3, 1] != 0 &&
-                gb.Board[Pozice[0, 0], Pozice[0, 1] - 1] == '\0' &&
-                gb.Board[Pozice[1, 0], Pozice[1, 1] - 1] == '\0' &&
-                gb.Board[Pozice[2, 0], Pozice[2, 1] - 1] == '\0' &&
-                gb.Board[Pozice[3, 0], Pozice[3, 1] - 1] == '\0');
-        }
-        private bool checkRightSide(ref GameBoard gb)
-        {
-            return (
-                Pozice[0, 1] != 9 && Pozice[1, 1] != 9 &&
-                Pozice[2, 1] != 9 && Pozice[3, 1] != 9 &&
-                gb.Board[Pozice[0, 0], Pozice[0, 1] + 1] == '\0' &&
-                gb.Board[Pozice[1, 0], Pozice[1, 1] + 1] == '\0' &&
-                gb.Board[Pozice[2, 0], Pozice[2, 1] + 1] == '\0' &&
-                gb.Board[Pozice[3, 0], Pozice[3, 1] + 1] == '\0');
-        }
         private bool checkRotRight(ref GameBoard gb)
         {
             return (stred[0] != 19 && stred[1] != 0 && stred[1] != 9 &&
@@ -78,7 +48,7 @@ namespace Tetris
         }
         public override bool MoveDown(ref GameBoard gb)
         {
-            if (checkDownSide(ref gb))
+            if (checkDownSide(ref gb, Pozice))
             {
                 for (int i = 0; i < 4; i++)
                 {
@@ -94,7 +64,7 @@ namespace Tetris
         }
         public override void MoveLeft(ref GameBoard gb)
         {
-            if (checkLeftSide(ref gb))
+            if (checkLeftSide(ref gb, Pozice))
             {
                 for (int i = 0; i < 4; i++)
                 {
@@ -105,7 +75,7 @@ namespace Tetris
         }
         public override void MoveRight(ref GameBoard gb)
         {
-            if (checkRightSide(ref gb))
+            if (checkRightSide(ref gb, Pozice))
             {
                 for (int i = 0; i < 4; i++)
                 {
