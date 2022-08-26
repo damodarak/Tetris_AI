@@ -11,6 +11,7 @@ namespace Tetris
         private string nazev;
         public int[,] Pozice;
         public char Color;
+        private int[,] poziceAI;
         public abstract void MoveUp();
         public abstract bool MoveDown(ref GameBoard gb);
         public abstract void MoveLeft(ref GameBoard gb);
@@ -18,5 +19,6 @@ namespace Tetris
         public abstract void RotLeft(ref GameBoard gb);
         public abstract void RotRight(ref GameBoard gb);
         public abstract int HardDrop(ref GameBoard gb);
+        public abstract int[,] FakeHardDrop(ref GameBoard gb);
     }
 }

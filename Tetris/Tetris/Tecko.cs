@@ -14,6 +14,7 @@ namespace Tetris
         private int[] stred;
         private int[,] poziceDiry;
         int rotNum;
+        private int[,] poziceAI;
         public Tecko()
         {
             Pozice = new int[4, 2] { { 2, 4 }, { 2, 3, }, { 2, 5 }, { 3, 4 } };
@@ -135,6 +136,24 @@ namespace Tetris
                 ++pocet;
             }
             return pocet;
+        }
+        public override int[,] FakeHardDrop(ref GameBoard gb)
+        {
+
+            poziceAI = (int[,])Pozice.Clone();
+            while (poziceAI[0, 0] != 19 && poziceAI[1, 0] != 19 &&
+                poziceAI[2, 0] != 19 && poziceAI[3, 0] != 19 &&
+                gb.Board[poziceAI[0, 0] + 1, poziceAI[0, 1]] == '\0' &&
+                gb.Board[poziceAI[1, 0] + 1, poziceAI[1, 1]] == '\0' &&
+                gb.Board[poziceAI[2, 0] + 1, poziceAI[2, 1]] == '\0' &&
+                gb.Board[poziceAI[3, 0] + 1, poziceAI[3, 1]] == '\0')
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    poziceAI[i, 0] += 1;
+                }
+            }
+            return poziceAI;
         }
     }
 }
