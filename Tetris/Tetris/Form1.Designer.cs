@@ -108,30 +108,30 @@ namespace Tetris
             // label1
             // 
             this.label1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label1.Location = new System.Drawing.Point(652, 257);
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label1.Location = new System.Drawing.Point(642, 256);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(83, 33);
+            this.label1.Size = new System.Drawing.Size(93, 33);
             this.label1.TabIndex = 5;
             this.label1.Text = "LEVEL";
             // 
             // label2
             // 
             this.label2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label2.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label2.Location = new System.Drawing.Point(652, 290);
+            this.label2.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label2.Location = new System.Drawing.Point(642, 289);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(83, 33);
+            this.label2.Size = new System.Drawing.Size(93, 33);
             this.label2.TabIndex = 6;
             this.label2.Text = "SCORE";
             // 
             // label3
             // 
             this.label3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label3.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label3.Location = new System.Drawing.Point(652, 323);
+            this.label3.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label3.Location = new System.Drawing.Point(642, 322);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(83, 33);
+            this.label3.Size = new System.Drawing.Size(93, 33);
             this.label3.TabIndex = 7;
             this.label3.Text = "LINES";
             // 
