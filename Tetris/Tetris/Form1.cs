@@ -12,6 +12,7 @@ namespace Tetris
 {
     public partial class Form1 : Form
     {
+        //keypress event,, faster moving down,
         public Form1()
         {
             InitializeComponent();
@@ -24,6 +25,8 @@ namespace Tetris
         GameBoard gb;
         int[] clearLines;
         bool gameOver;
+        int moveSpeed;
+
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             if (activePiece==null)
@@ -70,21 +73,12 @@ namespace Tetris
         {
             label4.Text = gb.level.ToString();
             label5.Text = gb.score.ToString();
-            label6.Text = gb.lines.ToString();
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            clearLines = new int[5];
-            timer1.Enabled = false;
-            activePiece = GameBoard.GeneratePiece();
-            nextPiece = GameBoard.GeneratePiece();
-            pictureBox1.Invalidate();
-            pictureBox3.Invalidate();
-            gb = new GameBoard();
-            updateInfo();
-            timer1.Enabled = true;
-            gameOver = false;
+            label6.Text = gb.lines.ToString();          
+            if (gb.level <= 10 && timer1.Interval != 201)
+            {
+                moveSpeed = 500 - (gb.level - 1) * 40;
+                timer1.Interval = moveSpeed;
+            }
         }
         private void button2_Click(object sender, EventArgs e)
         {
@@ -93,13 +87,13 @@ namespace Tetris
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (timer1.Interval == 200)
+            if (timer1.Interval == 201)
             {
                 pictureBox1.Invalidate();
                 pictureBox3.Invalidate();
                 timer1.Enabled = false;
                 GameBoard.MoveMap(ref gb, clearLines);
-                timer1.Interval = 500;
+                timer1.Interval = moveSpeed;
                 timer1.Enabled = true;
             }
             move(ref gb);
@@ -116,7 +110,7 @@ namespace Tetris
                     if (clearLines[4] != 0)
                     {
                         timer1.Enabled = false;
-                        timer1.Interval = 200;
+                        timer1.Interval = 201;
                         GameBoard.ClearLines(ref gb, clearLines);
                         timer1.Enabled = true;
                     }
@@ -165,6 +159,19 @@ namespace Tetris
             {
                 Visual.DrawNextPiece(nextPiece, e.Graphics, tuzka);
             }
+        }
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            clearLines = new int[5];
+            timer1.Enabled = false;
+            activePiece = GameBoard.GeneratePiece();
+            nextPiece = GameBoard.GeneratePiece();
+            pictureBox1.Invalidate();
+            pictureBox3.Invalidate();
+            gb = new GameBoard();
+            updateInfo();
+            timer1.Enabled = true;
+            gameOver = false;
         }
     }
 }

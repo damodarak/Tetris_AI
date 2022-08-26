@@ -67,7 +67,7 @@ namespace Tetris
             this.button1.TabIndex = 1;
             this.button1.Text = "Start";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
             // button2
             // 
@@ -140,7 +140,7 @@ namespace Tetris
             this.label4.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label4.Location = new System.Drawing.Point(741, 257);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(83, 33);
+            this.label4.Size = new System.Drawing.Size(141, 33);
             this.label4.TabIndex = 8;
             this.label4.Text = "1";
             // 
@@ -149,7 +149,7 @@ namespace Tetris
             this.label5.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label5.Location = new System.Drawing.Point(741, 290);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(83, 33);
+            this.label5.Size = new System.Drawing.Size(141, 33);
             this.label5.TabIndex = 9;
             this.label5.Text = "0";
             // 
@@ -158,7 +158,7 @@ namespace Tetris
             this.label6.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label6.Location = new System.Drawing.Point(741, 323);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(83, 33);
+            this.label6.Size = new System.Drawing.Size(141, 33);
             this.label6.TabIndex = 10;
             this.label6.Text = "0";
             // 
@@ -178,6 +178,7 @@ namespace Tetris
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.pictureBox1);
+            this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(910, 746);
             this.MinimumSize = new System.Drawing.Size(910, 746);
