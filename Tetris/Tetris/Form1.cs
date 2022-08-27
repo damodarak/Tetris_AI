@@ -128,14 +128,16 @@ namespace Tetris
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
+            /*
             if (timer2.Enabled)
             {
+                Visual.DrawMap(ref gb, e.Graphics, tuzka);
                 for (int i = 0; i < 4; i++)
                 {
                     Visual.DrawRect(e.Graphics, tuzka, 'V', pole[a, i, 0]-2, pole[a, i, 1]);
                 }
                 return;
-            }
+            }*/
             if (activePiece==null)
             {
                 return;

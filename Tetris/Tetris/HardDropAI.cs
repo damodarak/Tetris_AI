@@ -74,7 +74,6 @@ namespace Tetris
                     tvar.RotRight(ref gb);
                     tvar.MoveLeft(ref gb);
                     leftToRightHardDrop(ref gb, tvar, 8, 17, ref konec);
-                    //tvar.MoveRight(ref gb);
                     tvar.RotRight(ref gb);
                     leftToRightHardDrop(ref gb, tvar, 17, 25, ref konec);
                     tvar.RotRight(ref gb);

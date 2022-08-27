@@ -23,6 +23,25 @@ namespace Tetris
             level = 1;
             score = 0;
             points = new int[5] { 0, 40, 100, 300, 1200 };
+            //test for all hard drop
+            /* 
+            Random r = new Random();
+            for (int i = 10; i < 20; i++)
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    int cis = r.Next(0, 100);
+                    if (cis>=50)
+                    {
+                        Board[i, j] = 'O';
+                    }
+                    else
+                    {
+                        Board[i, j] = '\0';
+                    }
+                }
+            }
+            */
         }
         public bool AddToBoard(Shape shp)
         {
@@ -50,7 +69,7 @@ namespace Tetris
              * in case of a bad luck
              * fair distribution and making 'rare' pieces fall more
              */
-            if (numOfPieces % 5 == 0)
+            if (numOfPieces % 4 == 0)
             {
                 for (int i = 0; i < 7; i++)
                 {
