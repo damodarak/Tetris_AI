@@ -8,7 +8,6 @@ namespace Tetris
 {
     class Ctverec : Shape
     {
-        private string nazev = "Ctverec";
         public char Color = 'R';
         public int[,] Pozice;
         private int[,] poziceAI;

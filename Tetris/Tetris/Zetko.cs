@@ -8,9 +8,8 @@ namespace Tetris
 {
     class Zetko : Shape
     {
-        private string nazev = "Zetko";
-        new public char Color = 'G';
-        new public int[,] Pozice;
+        public char Color = 'G';
+        public int[,] Pozice;
         int rotNum;
         private int[,] poziceAI;
         public Zetko()

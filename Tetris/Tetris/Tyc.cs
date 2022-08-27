@@ -8,9 +8,8 @@ namespace Tetris
 {
     class Tyc : Shape
     {
-        private string nazev = "Tyc";
-        new public char Color = 'O';
-        new public int[,] Pozice;
+        public char Color = 'O';
+        public int[,] Pozice;
         private int rotNum;
         private int[,] poziceAI;
         public Tyc()

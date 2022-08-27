@@ -12,7 +12,7 @@ namespace Tetris
 {
     public partial class Form1 : Form
     {
-        //keypress event,, faster moving down,
+        //keypress event,, faster moving down, hudba, sound effects
         public Form1()
         {
             InitializeComponent();

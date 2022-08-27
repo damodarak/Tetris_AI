@@ -8,7 +8,6 @@ namespace Tetris
 {
     abstract class Shape
     {
-        private string nazev;
         private int[,] poziceAI;
         protected bool checkDownSide(ref GameBoard gb, int[,] Pozice)
         {
