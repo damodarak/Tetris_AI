@@ -42,6 +42,8 @@ namespace Tetris
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
+            this.button3 = new System.Windows.Forms.Button();
+            this.timer2 = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -71,7 +73,7 @@ namespace Tetris
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(513, 175);
+            this.button2.Location = new System.Drawing.Point(513, 172);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(102, 63);
             this.button2.TabIndex = 2;
@@ -162,11 +164,27 @@ namespace Tetris
             this.label6.TabIndex = 10;
             this.label6.Text = "0";
             // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(513, 241);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(102, 63);
+            this.button3.TabIndex = 11;
+            this.button3.Text = "AI";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // timer2
+            // 
+            this.timer2.Interval = 200;
+            this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
+            // 
             // Form1
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
             this.ClientSize = new System.Drawing.Size(894, 707);
+            this.Controls.Add(this.button3);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
@@ -205,6 +223,8 @@ namespace Tetris
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Timer timer2;
     }
 }
 

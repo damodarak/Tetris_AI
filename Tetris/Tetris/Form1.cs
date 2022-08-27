@@ -128,6 +128,14 @@ namespace Tetris
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
+            if (timer2.Enabled)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    Visual.DrawRect(e.Graphics, tuzka, 'V', pole[a, i, 0]-2, pole[a, i, 1]);
+                }
+                return;
+            }
             if (activePiece==null)
             {
                 return;
@@ -162,6 +170,7 @@ namespace Tetris
         }
         private void button1_Click_1(object sender, EventArgs e)
         {
+            timer2.Enabled = false;
             clearLines = new int[5];
             timer1.Enabled = false;
             activePiece = GameBoard.GeneratePiece();
@@ -172,6 +181,28 @@ namespace Tetris
             updateInfo();
             timer1.Enabled = true;
             gameOver = false;
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            a = 0;
+            timer2.Enabled = false;
+            clearLines = new int[5];
+            activePiece = GameBoard.GeneratePiece();
+            pictureBox1.Invalidate();
+            gb = new GameBoard();
+            updateInfo();
+            gameOver = false;
+            pole = HardDropAI.FindAllHardDrops(ref gb, activePiece);
+            timer2.Enabled = true;
+        }
+        int[,,] pole;
+        int a = 0;
+
+        private void timer2_Tick(object sender, EventArgs e)
+        {
+            pictureBox1.Invalidate();
+            a = (++a) % pole.GetLength(0);
         }
     }
 }

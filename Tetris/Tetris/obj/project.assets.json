@@ -8,19 +8,19 @@
     "net5.0-windows7.0": []
   },
   "packageFolders": {
-    "C:\\Users\\Damodar\\.nuget\\packages\\": {}
+    "C:\\Users\\uzivatel\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Damodar\\source\\repos\\student-kroupad1-tetris\\Tetris\\Tetris\\Tetris.csproj",
+      "projectUniqueName": "C:\\Users\\uzivatel\\source\\repos\\student-kroupad1\\Tetris\\Tetris\\Tetris.csproj",
       "projectName": "Tetris",
-      "projectPath": "C:\\Users\\Damodar\\source\\repos\\student-kroupad1-tetris\\Tetris\\Tetris\\Tetris.csproj",
-      "packagesPath": "C:\\Users\\Damodar\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Damodar\\source\\repos\\student-kroupad1-tetris\\Tetris\\Tetris\\obj\\",
+      "projectPath": "C:\\Users\\uzivatel\\source\\repos\\student-kroupad1\\Tetris\\Tetris\\Tetris.csproj",
+      "packagesPath": "C:\\Users\\uzivatel\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\uzivatel\\source\\repos\\student-kroupad1\\Tetris\\Tetris\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Damodar\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\uzivatel\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -63,7 +63,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.409\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.408\\RuntimeIdentifierGraph.json"
       }
     }
   }

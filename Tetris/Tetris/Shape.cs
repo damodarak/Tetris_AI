@@ -47,6 +47,23 @@ namespace Tetris
         public abstract void RotLeft(ref GameBoard gb);
         public abstract void RotRight(ref GameBoard gb);
         public abstract int HardDrop(ref GameBoard gb);
-        public abstract int[,] FakeHardDrop(ref GameBoard gb);
+        public int[,] FakeHardDrop(ref GameBoard gb, int[,] Pozice)
+        {
+
+            poziceAI = (int[,])Pozice.Clone();
+            while (poziceAI[0, 0] != 19 && poziceAI[1, 0] != 19 &&
+                poziceAI[2, 0] != 19 && poziceAI[3, 0] != 19 &&
+                gb.Board[poziceAI[0, 0] + 1, poziceAI[0, 1]] == '\0' &&
+                gb.Board[poziceAI[1, 0] + 1, poziceAI[1, 1]] == '\0' &&
+                gb.Board[poziceAI[2, 0] + 1, poziceAI[2, 1]] == '\0' &&
+                gb.Board[poziceAI[3, 0] + 1, poziceAI[3, 1]] == '\0')
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    poziceAI[i, 0] += 1;
+                }
+            }
+            return poziceAI;
+        }
     }
 }
