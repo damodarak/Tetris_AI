@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Tetris
 {
-    class HardDropAI
+    static class HardDropAI
     {
         static public int[,,] FindAllHardDrops(ref GameBoard gb, Shape shp)
         {
@@ -103,6 +103,102 @@ namespace Tetris
             for (int i = od; i < kam; i++)
             {
                 tvar.MoveLeft(ref gb);
+            }
+        }
+        static public int checkBlockedHoles(ref GameBoard gb, int[,] Pozice)
+        {
+            Queue q;
+            int numOfHoles = 0;
+            char[,] deska = (char[,])gb.Board.Clone();
+            for (int i = 0; i < 4; i++)
+            {
+                deska[Pozice[i, 0], Pozice[i, 1]] = 'P';//Pozice
+            }
+            for (int i = 0; i < 4; i++)
+            {
+                q = new Queue();
+                int tempHoles = 0;
+                if (Pozice[i, 0] != 19 && deska[Pozice[i, 0] + 1, Pozice[i, 1]] == '\0')
+                {
+                    deska[Pozice[i, 0] + 1, Pozice[i, 1]] = 'C'; //oCCupied
+                    q.Insert(new int[2] { Pozice[i, 0] + 1, Pozice[i, 1] });
+                    ++tempHoles;
+                    while (q.Count())
+                    {
+                        int[] coord = q.Pop();
+                        if (coord[0] == 2)
+                        {
+                            tempHoles = 0;
+                            break;
+                        }
+                        else
+                        {
+                            if (coord[0] - 1 >= 2 && deska[coord[0] - 1, coord[1]] == '\0')
+                            {
+                                ++tempHoles;
+                                deska[coord[0] - 1, coord[1]] = 'C';
+                                q.Insert(new int[2] { coord[0] - 1, coord[1] });
+                            }
+                            if (coord[0] + 1 <= 19 && deska[coord[0] + 1, coord[1]] == '\0')
+                            {
+                                ++tempHoles;
+                                deska[coord[0] + 1, coord[1]] = 'C';
+                                q.Insert(new int[2] { coord[0] + 1, coord[1] });
+                            }
+                            if (coord[1] - 1 >= 0 && deska[coord[0], coord[1] - 1] == '\0')
+                            {
+                                ++tempHoles;
+                                deska[coord[0], coord[1] - 1] = 'C';
+                                q.Insert(new int[2] { coord[0], coord[1] - 1 });
+                            }
+                            if (coord[1] + 1 <= 9 && deska[coord[0], coord[1] + 1] == '\0')
+                            {
+                                ++tempHoles;
+                                deska[coord[0], coord[1] + 1] = 'C';
+                                q.Insert(new int[2] { coord[0], coord[1] + 1 });
+                            }
+                        }
+                    }
+                    if (tempHoles == 0)
+                    {
+                        clearAfterBFS(deska, new int[2] { Pozice[i, 0] + 1, Pozice[i, 1] });
+                    }
+                    else
+                    {
+                        numOfHoles += tempHoles;
+                    }
+                }
+            }
+            return numOfHoles;
+        }
+        static private void clearAfterBFS(char[,] deska, int[] coord)
+        {
+            Queue q = new Queue();
+            deska[coord[0], coord[1]] = '\0';
+            q.Insert(coord);
+            while (q.Count())
+            {
+                int[] souradnice = q.Pop();
+                if (souradnice[0] - 1 >= 2 && deska[souradnice[0] - 1, souradnice[1]] == 'C')
+                {
+                    deska[souradnice[0] - 1, souradnice[1]] = '\0';
+                    q.Insert(new int[2] { souradnice[0] - 1, souradnice[1] });
+                }
+                if (souradnice[0] + 1 <= 19 && deska[souradnice[0] + 1, souradnice[1]] == 'C')
+                {
+                    deska[souradnice[0] + 1, souradnice[1]] = '\0';
+                    q.Insert(new int[2] { souradnice[0] + 1, souradnice[1] });
+                }
+                if (souradnice[1] - 1 >= 0 && deska[souradnice[0], souradnice[1] - 1] == 'C')
+                {
+                    deska[souradnice[0], souradnice[1] - 1] = '\0';
+                    q.Insert(new int[2] { souradnice[0], souradnice[1] - 1 });
+                }
+                if (souradnice[1] + 1 <= 9 && deska[souradnice[0], souradnice[1] + 1] == 'C')
+                {
+                    deska[souradnice[0], souradnice[1] + 1] = '\0';
+                    q.Insert(new int[2] { souradnice[0], souradnice[1] + 1 });
+                }
             }
         }
     }
