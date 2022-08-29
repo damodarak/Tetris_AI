@@ -36,7 +36,7 @@ namespace Tetris
                 return false;
             }
         }
-        public override void MoveLeft(ref GameBoard gb)
+        public override bool MoveLeft(ref GameBoard gb)
         {
             if (checkLeftSide(ref gb, Pozice))
             {
@@ -44,9 +44,14 @@ namespace Tetris
                 {
                     Pozice[i, 1] -= 1;
                 }
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
-        public override void MoveRight(ref GameBoard gb)
+        public override bool MoveRight(ref GameBoard gb)
         {
             if (checkRightSide(ref gb, Pozice))
             {
@@ -54,6 +59,11 @@ namespace Tetris
                 {
                     Pozice[i, 1] += 1;
                 }
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
         public override void RotRight(ref GameBoard gb)

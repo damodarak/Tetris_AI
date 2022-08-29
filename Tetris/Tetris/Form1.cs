@@ -27,6 +27,9 @@ namespace Tetris
         bool gameOver;
         int moveSpeed;
 
+        //ai
+        int[,] placeToDropFrom;
+
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             if (activePiece==null)
@@ -128,16 +131,6 @@ namespace Tetris
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
-            /*
-            if (timer2.Enabled)
-            {
-                Visual.DrawMap(ref gb, e.Graphics, tuzka);
-                for (int i = 0; i < 4; i++)
-                {
-                    Visual.DrawRect(e.Graphics, tuzka, 'V', pole[a, i, 0]-2, pole[a, i, 1]);
-                }
-                return;
-            }*/
             if (activePiece==null)
             {
                 return;
@@ -187,24 +180,31 @@ namespace Tetris
 
         private void button3_Click(object sender, EventArgs e)
         {
-            a = 0;
+            placeToDropFrom = new int[5, 2];
+            timer1.Enabled = false;
             timer2.Enabled = false;
             clearLines = new int[5];
-            activePiece = GameBoard.GeneratePiece();
+            activePiece = GameBoard.GeneratePiece();            
             pictureBox1.Invalidate();
             gb = new GameBoard();
+            placeToDropFrom = HardDropAI.FindBestPlaceForDrop(ref gb, activePiece);
             updateInfo();
             gameOver = false;
-            pole = HardDropAI.FindAllHardDrops(ref gb, activePiece);
             timer2.Enabled = true;
         }
-        int[,,] pole;
-        int a = 0;
 
         private void timer2_Tick(object sender, EventArgs e)
         {
             pictureBox1.Invalidate();
-            a = (++a) % pole.GetLength(0);
+            if (!HardDropAI.PlayNextMove(ref gb, activePiece, placeToDropFrom))
+            {
+                gb.AddToBoard(activePiece);              
+                clearLines = gb.FindFullLines(activePiece);
+                GameBoard.ClearLines(ref gb, clearLines);
+                GameBoard.MoveMap(ref gb, clearLines);
+                activePiece = GameBoard.GeneratePiece();
+                placeToDropFrom = HardDropAI.FindBestPlaceForDrop(ref gb, activePiece);
+            }         
         }
     }
 }
