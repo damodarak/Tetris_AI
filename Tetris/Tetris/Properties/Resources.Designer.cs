@@ -79,5 +79,14 @@ namespace Tetris.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream tetris_music {
+            get {
+                return ResourceManager.GetStream("tetris_music", resourceCulture);
+            }
+        }
     }
 }

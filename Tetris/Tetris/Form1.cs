@@ -12,7 +12,8 @@ namespace Tetris
 {
     public partial class Form1 : Form
     {
-        //keypress event,, faster moving down, hudba, sound effects
+        System.Media.SoundPlayer player;
+        //keypress event,, faster moving down, hudba, sound effects, sideBlocking
         public Form1()
         {
             InitializeComponent();
@@ -29,6 +30,11 @@ namespace Tetris
 
         //ai
         int[,] placeToDropFrom;
+
+        //for testing purpose
+        static public int test1 = 0;
+        static public int test2 = 0;
+        static public int test3 = 0;
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
@@ -74,10 +80,16 @@ namespace Tetris
         }
         private void updateInfo()
         {
+            //testing
+            label1.Text = test1.ToString();
+            label2.Text = test2.ToString();
+            label3.Text = test3.ToString();
+
+
             label4.Text = gb.level.ToString();
             label5.Text = gb.score.ToString();
             label6.Text = gb.lines.ToString();          
-            if (gb.level <= 10 && timer1.Interval != 201)
+            if (timer2.Enabled == false && gb.level <= 10 && timer1.Interval != 201)
             {
                 moveSpeed = 500 - (gb.level - 1) * 40;
                 timer1.Interval = moveSpeed;
@@ -180,6 +192,8 @@ namespace Tetris
 
         private void button3_Click(object sender, EventArgs e)
         {
+            player = new System.Media.SoundPlayer(Properties.Resources.tetris_music);
+            player.PlayLooping();
             placeToDropFrom = new int[5, 2];
             timer1.Enabled = false;
             timer2.Enabled = false;
@@ -196,6 +210,7 @@ namespace Tetris
         private void timer2_Tick(object sender, EventArgs e)
         {
             pictureBox1.Invalidate();
+
             if (!HardDropAI.PlayNextMove(ref gb, activePiece, placeToDropFrom))
             {
                 gb.AddToBoard(activePiece);              
@@ -204,6 +219,7 @@ namespace Tetris
                 GameBoard.MoveMap(ref gb, clearLines);
                 activePiece = GameBoard.GeneratePiece();
                 placeToDropFrom = HardDropAI.FindBestPlaceForDrop(ref gb, activePiece);
+                updateInfo();
             }         
         }
     }

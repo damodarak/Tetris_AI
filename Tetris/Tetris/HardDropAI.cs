@@ -232,11 +232,67 @@ namespace Tetris
                 }
             }
         }
+        static private int checkSoftBlockedHoles(ref GameBoard gb, int[,] Pozice)
+        {
+            int numOfSoftHoles = 0;
+            char[,] deska = (char[,])gb.Board.Clone();
+            int[,] clonePozice = (int[,])Pozice.Clone();
+            for (int i = 0; i < 4; i++)
+            {
+                deska[Pozice[i, 0], Pozice[i, 1]] = 'P';//Pozice
+            }
+            for (int i = 0; i < 4; i++)
+            {
+                while (clonePozice[i, 0] + 1 <= 19 && deska[clonePozice[i, 0] + 1, clonePozice[i, 1]] == '\0')
+                {
+                    numOfSoftHoles++;
+                    clonePozice[i, 0] += 1;
+                }
+            }
+            return numOfSoftHoles;
+        }
+        static private int checkHeightDiff(ref GameBoard gb, int[,] Pozice)
+        {
+            int lineNum = 2;
+            while (lineNum<= 19 && checkLine(ref gb, lineNum))
+            {
+                ++lineNum;
+            }
+            int boardHeight = 20 - lineNum;
+            /*int averageBlockHeight = 0;
+            for (int i = 0; i < 4; i++)
+            {
+                averageBlockHeight += (20 - Pozice[i, 0]);
+            }
+            averageBlockHeight /= 4;*/
+            int heighestBlock = 0;
+            for (int i = 0; i < 4; i++)
+            {
+                if ((20 - Pozice[i,0]) > heighestBlock)
+                {
+                    heighestBlock = 20 - Pozice[i, 0];
+                }
+            }
+            //int diff = averageBlockHeight - boardHeight;
+            int diff = heighestBlock - boardHeight;
+            return diff;
+        }
+        static private bool checkLine(ref GameBoard gb, int lineNum)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                if (gb.Board[lineNum, i] != '\0')
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
         static public int[,] FindBestPlaceForDrop(ref GameBoard gb,  Shape shp)
         {
             int[,,] drops = findAllHardDrops(ref gb, shp);
             int[,] bestDrop = new int[5,2];//bestDrop[4,0] je pocet rotaci
-            int bestDropHoles = 200;
+            int score = 5000;
             for (int i = 0; i < drops.GetLength(0); i++)
             {
                 int[,] tempDrop = new int[5, 2];
@@ -246,11 +302,21 @@ namespace Tetris
                     tempDrop[j, 1] = drops[i, j, 1];
                 }
                 tempDrop[4, 0] = drops[i, 0, 2];
-                int cis = checkBlockedHoles(ref gb, tempDrop);
-                if (bestDropHoles > cis)
+                int hardBlocked = checkBlockedHoles(ref gb, tempDrop);
+                int softBlocked = checkSoftBlockedHoles(ref gb, tempDrop);
+                int diff = checkHeightDiff(ref gb, tempDrop);
+                int tempScore = hardBlocked * 10 + softBlocked * 7 + diff * 5;
+              
+                if (score > tempScore)
                 {
-                    bestDropHoles = cis;
+                    score = tempScore;
                     bestDrop = tempDrop;
+
+                    //testing purpose
+                    Form1.test1 = hardBlocked;
+                    Form1.test2 = softBlocked;
+                    Form1.test3 = diff;
+                    //testing purpose
                 }
             }
             while (bestDrop[0,0] != 2 && bestDrop[1,0] != 2 && bestDrop[2,0] != 2 && bestDrop[3,0] != 2)
@@ -265,7 +331,12 @@ namespace Tetris
         static public bool PlayNextMove(ref GameBoard gb, Shape shp, int[,] finishPoz)
         {
             dynamic tvar = shp;
-            if (finishPoz[4, 0] > 0 && finishPoz[4,0] <=3)
+            if (tvar.Pozice[0,0] < 2 || tvar.Pozice[1,0] < 2 || tvar.Pozice[2,0] < 2 || tvar.Pozice[3,0] < 2)
+            {
+                tvar.MoveDown(ref gb);
+                return true;
+            }
+            else if (finishPoz[4, 0] > 0 && finishPoz[4,0] <=3)
             {
                 tvar.RotRight(ref gb);
                 finishPoz[4, 0]--;
