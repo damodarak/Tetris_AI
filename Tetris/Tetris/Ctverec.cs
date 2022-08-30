@@ -66,9 +66,9 @@ namespace Tetris
                 return false;
             }
         }
-        public override void RotRight(ref GameBoard gb)
+        public override bool RotRight(ref GameBoard gb)
         {
-            return;
+            return true;
         }
         public override void RotLeft(ref GameBoard gb)
         {

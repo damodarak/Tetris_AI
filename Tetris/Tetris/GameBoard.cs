@@ -50,7 +50,7 @@ namespace Tetris
              * in case of a bad luck
              * fair distribution and making 'rare' pieces fall more
              */
-            if (numOfPieces % 4 == 0)
+            if (numOfPieces % 3 == 0)
             {
                 for (int i = 0; i < 7; i++)
                 {
@@ -112,7 +112,7 @@ namespace Tetris
             updateInfo(konec[4]);
             return konec;
         }
-        private bool contains(int[] kde, int co)
+        static public bool contains(int[] kde, int co)
         {
             for (int i = 0; i < 4; i++)
             {

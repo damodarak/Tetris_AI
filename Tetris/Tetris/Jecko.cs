@@ -92,7 +92,7 @@ namespace Tetris
                 return false;
             }
         }
-        public override void RotRight(ref GameBoard gb)
+        public override bool RotRight(ref GameBoard gb)
         {
             if (checkRotRight(ref gb))
             {
@@ -104,8 +104,9 @@ namespace Tetris
                 Pozice[3, 1] += rotationHack[rotHackNum, 1];
                 rotNum *= -1;
                 rotHackNum = (++rotHackNum) % 4;
+                return true;
             }
-
+            return false;
         }
         public override void RotLeft(ref GameBoard gb)
         {

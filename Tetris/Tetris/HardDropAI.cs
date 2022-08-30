@@ -253,18 +253,7 @@ namespace Tetris
         }
         static private int checkHeightDiff(ref GameBoard gb, int[,] Pozice)
         {
-            int lineNum = 2;
-            while (lineNum<= 19 && checkLine(ref gb, lineNum))
-            {
-                ++lineNum;
-            }
-            int boardHeight = 20 - lineNum;
-            /*int averageBlockHeight = 0;
-            for (int i = 0; i < 4; i++)
-            {
-                averageBlockHeight += (20 - Pozice[i, 0]);
-            }
-            averageBlockHeight /= 4;*/
+            int height = boardHeight(ref gb);
             int heighestBlock = 0;
             for (int i = 0; i < 4; i++)
             {
@@ -273,11 +262,20 @@ namespace Tetris
                     heighestBlock = 20 - Pozice[i, 0];
                 }
             }
-            //int diff = averageBlockHeight - boardHeight;
-            int diff = heighestBlock - boardHeight;
+            int diff = heighestBlock - height;
             return diff;
         }
-        static private bool checkLine(ref GameBoard gb, int lineNum)
+        static private int boardHeight(ref GameBoard gb)
+        {
+            int lineNum = 2;
+            while (lineNum <= 19 && checkLineClear(ref gb, lineNum))
+            {
+                ++lineNum;
+            }
+            int boardHeight = 20 - lineNum;
+            return boardHeight;
+        }
+        static private bool checkLineClear(ref GameBoard gb, int lineNum)
         {
             for (int i = 0; i < 10; i++)
             {
@@ -287,6 +285,84 @@ namespace Tetris
                 }
             }
             return true;
+        }
+        static private bool checkLineFull(char[,] deska, int lineNum)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                if (deska[lineNum, i] == '\0')
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        static private int checkFullLines(ref GameBoard gb, int[,] Pozice)
+        {
+            int fullLines = 0;
+            int[] checkedLines = new int[4];
+            char[,] deska = (char[,])gb.Board.Clone();
+            for (int i = 0; i < 4; i++)
+            {
+                deska[Pozice[i, 0], Pozice[i, 1]] = 'C';//oCCupied
+            }
+            for (int i = 0; i < 4; i++)
+            {
+                if (!GameBoard.contains(checkedLines, Pozice[i,0]))
+                {
+                    checkedLines[i] = Pozice[i, 0];
+                    if (checkLineFull(deska, Pozice[i,0]))
+                    {
+                        fullLines++;
+                    }
+                }
+            }
+            return fullLines;
+        }
+        static private int deltaHrbolatosti(ref GameBoard gb, int[,] Pozice)
+        {
+            int[] vyskaSloupu = new int[10];
+            for (int i = 0; i < 10; i++)
+            {
+                for (int j = 2; j < 20; j++)
+                {
+                    if (gb.Board[j, i] != '\0')
+                    {
+                        vyskaSloupu[i] = 20 - j;
+                        break;
+                    }
+                }
+            }
+
+            int hrbolatostPred = 0;
+            for (int i = 0; i < 9; i++)
+            {
+                hrbolatostPred += Math.Abs(vyskaSloupu[i] + vyskaSloupu[i + 1]);
+            }
+
+            char[,] deska = (char[,])gb.Board.Clone();
+            for (int i = 0; i < 4; i++)
+            {
+                deska[Pozice[i, 0], Pozice[i, 1]] = 'C';//oCCupied
+            }
+            vyskaSloupu = new int[10];
+            for (int i = 0; i < 10; i++)
+            {
+                for (int j = 2; j < 20; j++)
+                {
+                    if (deska[j, i] != '\0')
+                    {
+                        vyskaSloupu[i] = 20 - j;
+                        break;
+                    }
+                }
+            }
+            int hrbolatostPo = 0;
+            for (int i = 0; i < 9; i++)
+            {
+                hrbolatostPo += Math.Abs(vyskaSloupu[i] + vyskaSloupu[i + 1]);
+            }
+            return hrbolatostPo - hrbolatostPred;
         }
         static public int[,] FindBestPlaceForDrop(ref GameBoard gb,  Shape shp)
         {
@@ -302,21 +378,32 @@ namespace Tetris
                     tempDrop[j, 1] = drops[i, j, 1];
                 }
                 tempDrop[4, 0] = drops[i, 0, 2];
+                //data for decision
                 int hardBlocked = checkBlockedHoles(ref gb, tempDrop);
                 int softBlocked = checkSoftBlockedHoles(ref gb, tempDrop);
                 int diff = checkHeightDiff(ref gb, tempDrop);
-                int tempScore = hardBlocked * 10 + softBlocked * 7 + diff * 5;
-              
+                int numLines = checkFullLines(ref gb, tempDrop);
+                int hrbolatost = deltaHrbolatosti(ref gb, tempDrop);
+                //data
+                int tempScore;
+
+                tempScore = hardBlocked * 5 + softBlocked + diff * 5 - numLines * 7 + hrbolatost / 5;
+                if (numLines>2)
+                {
+                    bestDrop = tempDrop;
+                    break;
+                }
+
                 if (score > tempScore)
                 {
+                    Form1.test1 = hardBlocked * 4;
+                    Form1.test2 = softBlocked;
+                    Form1.test3 = hrbolatost/4;
+                    Form1.test4 = diff*5;
+                    Form1.test5 = numLines*7;
+
                     score = tempScore;
                     bestDrop = tempDrop;
-
-                    //testing purpose
-                    Form1.test1 = hardBlocked;
-                    Form1.test2 = softBlocked;
-                    Form1.test3 = diff;
-                    //testing purpose
                 }
             }
             while (bestDrop[0,0] != 2 && bestDrop[1,0] != 2 && bestDrop[2,0] != 2 && bestDrop[3,0] != 2)
@@ -332,15 +419,13 @@ namespace Tetris
         {
             dynamic tvar = shp;
             if (tvar.Pozice[0,0] < 2 || tvar.Pozice[1,0] < 2 || tvar.Pozice[2,0] < 2 || tvar.Pozice[3,0] < 2)
-            {
-                tvar.MoveDown(ref gb);
-                return true;
+            {               
+                return tvar.MoveDown(ref gb);
             }
             else if (finishPoz[4, 0] > 0 && finishPoz[4,0] <=3)
-            {
-                tvar.RotRight(ref gb);
+            {               
                 finishPoz[4, 0]--;
-                return true;
+                return tvar.RotRight(ref gb);
             }
             else if (finishPoz[4, 0] == 0)
             {
@@ -377,9 +462,8 @@ namespace Tetris
                 return tvar.MoveDown(ref gb);
             }
             else if (finishPoz[4,0] == 100)
-            {
-                tvar.MoveRight(ref gb);
-                return true;
+            {               
+                return tvar.MoveRight(ref gb);
             }
             return true;//just to calm down visual studio
         }

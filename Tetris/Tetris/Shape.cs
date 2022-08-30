@@ -45,7 +45,7 @@ namespace Tetris
         public abstract bool MoveLeft(ref GameBoard gb);
         public abstract bool MoveRight(ref GameBoard gb);
         public abstract void RotLeft(ref GameBoard gb);
-        public abstract void RotRight(ref GameBoard gb);
+        public abstract bool RotRight(ref GameBoard gb);
         public abstract int HardDrop(ref GameBoard gb);
         public int[,] FakeHardDrop(ref GameBoard gb, int[,] Pozice)
         {
