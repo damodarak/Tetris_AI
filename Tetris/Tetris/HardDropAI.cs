@@ -8,6 +8,7 @@ namespace Tetris
 {
     static class HardDropAI
     {
+        //add bocni HardBloky
         static private int[,,] findAllHardDrops(ref GameBoard gb, Shape shp)
         {
             int[,,] konec;
@@ -139,20 +140,40 @@ namespace Tetris
         static private int checkBlockedHoles(ref GameBoard gb, int[,] Pozice)
         {
             Queue q;
-            int numOfHoles = 0;
+            int numOfHoles = 0;//pocet zablokovanych der
             char[,] deska = (char[,])gb.Board.Clone();
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 4; i++)//dosadime do hraci desky umistenou figurku
             {
                 deska[Pozice[i, 0], Pozice[i, 1]] = 'P';//Pozice
             }
+
+            int[] clearLines = new int[5];
             for (int i = 0; i < 4; i++)
             {
+                if (checkLineFull(deska, Pozice[i,0]))
+                {
+                    for (int j = 0; j < 10; j++)
+                    {
+                        deska[Pozice[i, 0], j] = '\0';
+                    }
+                    clearLines[clearLines[4]] = Pozice[i, 0];
+                    clearLines[4]++;               
+                }
+            }
+            GameBoard.MoveMap(ref deska, clearLines);//budeme kontrolovat blokovane diry po odstranenych radach
+
+            for (int i = 0; i < 4; i++)
+            {
+                if (GameBoard.contains(clearLines, Pozice[i,0]))
+                {
+                    continue;
+                }
                 q = new Queue();
                 int tempHoles = 0;
-                if (Pozice[i, 0] != 19 && deska[Pozice[i, 0] + 1, Pozice[i, 1]] == '\0')
+                if (Pozice[i, 0] + clearLines[4] < 19 && deska[Pozice[i, 0] + 1 + clearLines[4], Pozice[i, 1]] == '\0')
                 {
-                    deska[Pozice[i, 0] + 1, Pozice[i, 1]] = 'C'; //oCCupied
-                    q.Insert(new int[2] { Pozice[i, 0] + 1, Pozice[i, 1] });
+                    deska[Pozice[i, 0] + 1 + clearLines[4], Pozice[i, 1]] = 'C'; //oCCupied
+                    q.Insert(new int[2] { Pozice[i, 0] + 1 + clearLines[4], Pozice[i, 1] });
                     ++tempHoles;
                     while (q.Count())
                     {
@@ -192,7 +213,7 @@ namespace Tetris
                     }
                     if (tempHoles == 0)
                     {
-                        clearAfterBFS(deska, new int[2] { Pozice[i, 0] + 1, Pozice[i, 1] });
+                        clearAfterBFS(deska, new int[2] { Pozice[i, 0] + 1 + clearLines[4], Pozice[i, 1] });
                     }
                     else
                     {
@@ -232,8 +253,12 @@ namespace Tetris
                 }
             }
         }
-        static private int checkSoftBlockedHoles(ref GameBoard gb, int[,] Pozice)
+        static private int checkSoftBlockedHoles(ref GameBoard gb, int[,] Pozice, int hardBlocked)
         {
+            if (hardBlocked>0)
+            {
+                return 0;
+            }
             int numOfSoftHoles = 0;
             char[,] deska = (char[,])gb.Board.Clone();
             int[,] clonePozice = (int[,])Pozice.Clone();
@@ -241,9 +266,30 @@ namespace Tetris
             {
                 deska[Pozice[i, 0], Pozice[i, 1]] = 'P';//Pozice
             }
+
+            int[] clearLines = new int[5];
             for (int i = 0; i < 4; i++)
             {
-                while (clonePozice[i, 0] + 1 <= 19 && deska[clonePozice[i, 0] + 1, clonePozice[i, 1]] == '\0')
+                if (checkLineFull(deska, Pozice[i, 0]))
+                {
+                    for (int j = 0; j < 10; j++)
+                    {
+                        deska[Pozice[i, 0], j] = '\0';
+                    }
+                    clearLines[clearLines[4]] = Pozice[i, 0];
+                    clearLines[4]++;
+                }
+            }
+            GameBoard.MoveMap(ref deska, clearLines);//budeme kontrolovat blokovane diry po odstranenych radach
+
+
+            for (int i = 0; i < 4; i++)
+            {
+                if (GameBoard.contains(clearLines, Pozice[i, 0]))
+                {
+                    continue;
+                }
+                while (clonePozice[i, 0] + 1 + clearLines[4] <= 19 && deska[clonePozice[i, 0] + 1 + clearLines[4], clonePozice[i, 1]] == '\0')
                 {
                     numOfSoftHoles++;
                     clonePozice[i, 0] += 1;
@@ -380,14 +426,14 @@ namespace Tetris
                 tempDrop[4, 0] = drops[i, 0, 2];
                 //data for decision
                 int hardBlocked = checkBlockedHoles(ref gb, tempDrop);
-                int softBlocked = checkSoftBlockedHoles(ref gb, tempDrop);
+                int softBlocked = checkSoftBlockedHoles(ref gb, tempDrop, hardBlocked);
                 int diff = checkHeightDiff(ref gb, tempDrop);
                 int numLines = checkFullLines(ref gb, tempDrop);
                 int hrbolatost = deltaHrbolatosti(ref gb, tempDrop);
                 //data
                 int tempScore;
 
-                tempScore = hardBlocked * 5 + softBlocked + diff * 5 - numLines * 7 + hrbolatost / 5;
+                tempScore = hardBlocked * 6 + softBlocked * 2 + diff * 5 - numLines * 6 + hrbolatost / 4;
                 if (numLines>2)
                 {
                     bestDrop = tempDrop;
@@ -396,11 +442,11 @@ namespace Tetris
 
                 if (score > tempScore)
                 {
-                    Form1.test1 = hardBlocked * 4;
-                    Form1.test2 = softBlocked;
+                    Form1.test1 = hardBlocked * 6;
+                    Form1.test2 = softBlocked*2;
                     Form1.test3 = hrbolatost/4;
                     Form1.test4 = diff*5;
-                    Form1.test5 = numLines*7;
+                    Form1.test5 = numLines*6;
 
                     score = tempScore;
                     bestDrop = tempDrop;

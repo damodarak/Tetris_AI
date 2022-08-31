@@ -1,7 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\Tetris",
+    "\\Tetris\\Tetris"
   ],
-  "SelectedNode": "\\Tetris.sln",
+  "SelectedNode": "\\Tetris\\Tetris\\HardDropAI.cs",
   "PreviewInSolutionExplorer": false
 }

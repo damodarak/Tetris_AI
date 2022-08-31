@@ -129,15 +129,15 @@ namespace Tetris
             lines += numLines;
             level = (lines / 10) + 1;           
         }
-        static public void MoveMap(ref GameBoard gb, int[] lines)
+        static public void MoveMap(ref char[,] deska, int[] lines)
         {
-            for (int i = 0; i < lines[4]; i++)
+            for (int i = 0; i < lines[4]; i++)//lines[4] je pocet rad, ktere byly vymazany
             {
-                for (int j = lines[i]; j > 0; j--)
+                for (int j = lines[i]; j > 0; j--)//posuneme vsechno dolu i rady ktere nahore nevidime
                 {
-                    for (int k = 0; k < 10; k++)
+                    for (int k = 0; k < 10; k++)//vsechny sloupce
                     {
-                        gb.Board[j, k] = gb.Board[j - 1, k];
+                        deska[j, k] = deska[j - 1, k];//ctverec o jedna vys jde niz
                     }
                 }
             }

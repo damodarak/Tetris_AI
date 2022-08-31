@@ -111,7 +111,7 @@ namespace Tetris
                 pictureBox1.Invalidate();
                 pictureBox3.Invalidate();
                 timer1.Enabled = false;
-                GameBoard.MoveMap(ref gb, clearLines);
+                GameBoard.MoveMap(ref gb.Board, clearLines);
                 timer1.Interval = moveSpeed;
                 timer1.Enabled = true;
             }
@@ -144,7 +144,6 @@ namespace Tetris
                 }
             }
         }
-
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
             if (activePiece==null)
@@ -229,7 +228,7 @@ namespace Tetris
                 gb.AddToBoard(activePiece);              
                 clearLines = gb.FindFullLines(activePiece);
                 GameBoard.ClearLines(ref gb, clearLines);
-                GameBoard.MoveMap(ref gb, clearLines);
+                GameBoard.MoveMap(ref gb.Board, clearLines);
                 activePiece = nextPiece;
                 nextPiece = GameBoard.GeneratePiece();
                 placeToDropFrom = HardDropAI.FindBestPlaceForDrop(ref gb, activePiece);

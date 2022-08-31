@@ -101,7 +101,7 @@ namespace Tetris
             this.pictureBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBox2.Location = new System.Drawing.Point(513, 451);
             this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(261, 101);
+            this.pictureBox2.Size = new System.Drawing.Size(261, 91);
             this.pictureBox2.TabIndex = 3;
             this.pictureBox2.TabStop = false;
             this.pictureBox2.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox2_Paint);
@@ -186,7 +186,7 @@ namespace Tetris
             // 
             // timer2
             // 
-            this.timer2.Interval = 10;
+            this.timer2.Interval = 20;
             this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
             // 
             // label7
