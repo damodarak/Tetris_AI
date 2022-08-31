@@ -383,7 +383,7 @@ namespace Tetris
             int hrbolatostPred = 0;
             for (int i = 0; i < 9; i++)
             {
-                hrbolatostPred += Math.Abs(vyskaSloupu[i] + vyskaSloupu[i + 1]);
+                hrbolatostPred += Math.Abs(vyskaSloupu[i] - vyskaSloupu[i + 1]);
             }
 
             char[,] deska = (char[,])gb.Board.Clone();
@@ -406,7 +406,7 @@ namespace Tetris
             int hrbolatostPo = 0;
             for (int i = 0; i < 9; i++)
             {
-                hrbolatostPo += Math.Abs(vyskaSloupu[i] + vyskaSloupu[i + 1]);
+                hrbolatostPo += Math.Abs(vyskaSloupu[i] - vyskaSloupu[i + 1]);
             }
             return hrbolatostPo - hrbolatostPred;
         }
@@ -431,9 +431,8 @@ namespace Tetris
                 int numLines = checkFullLines(ref gb, tempDrop);
                 int hrbolatost = deltaHrbolatosti(ref gb, tempDrop);
                 //data
-                int tempScore;
 
-                tempScore = hardBlocked * 6 + softBlocked * 2 + diff * 5 - numLines * 6 + hrbolatost / 4;
+                int tempScore = hardBlocked * 10 + softBlocked * 7 + diff * 5 - numLines * 3 + hrbolatost / 4;
                 if (numLines>2)
                 {
                     bestDrop = tempDrop;
@@ -442,11 +441,11 @@ namespace Tetris
 
                 if (score > tempScore)
                 {
-                    Form1.test1 = hardBlocked * 6;
-                    Form1.test2 = softBlocked*2;
+                    Form1.test1 = hardBlocked * 10;
+                    Form1.test2 = softBlocked * 7;
                     Form1.test3 = hrbolatost/4;
                     Form1.test4 = diff*5;
-                    Form1.test5 = numLines*6;
+                    Form1.test5 = numLines*3;
 
                     score = tempScore;
                     bestDrop = tempDrop;
