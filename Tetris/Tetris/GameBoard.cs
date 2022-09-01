@@ -10,12 +10,15 @@ namespace Tetris
     {
         //colors - Orange, Red, Violet, Yellow, Green, Darkblue, Lightblue
         static int numOfPieces = 0;
-        static int[] piecesDistribution = new int[7];
+        static bool[] piecesDistribution = new bool[7];
+        static Random r = new Random(Environment.TickCount);
+
         public char[,] Board;
         public int lines;
         public int level;
         public int score;
         private int[] points;
+
         public GameBoard()
         {
             Board = new char[20, 10];
@@ -42,50 +45,59 @@ namespace Tetris
         }
         static public Shape GeneratePiece()
         {
-            Random r = new Random(Environment.TickCount);
-            int cis;
             ++numOfPieces;
-            cis = r.Next(0, 7);
-            /*
-             * in case of a bad luck
-             * fair distribution and making 'rare' pieces fall more
-             */
-            if (numOfPieces % 3 == 0)
+            int cis;
+
+            if (numOfPieces == 8)
             {
-                for (int i = 0; i < 7; i++)
+                piecesDistribution = new bool[7];
+                numOfPieces = 1;
+                cis = r.Next(0, 7);
+            }
+            else if(numOfPieces == 7)
+            {
+                cis = 0;
+                while (piecesDistribution[cis])
                 {
-                    if (piecesDistribution[i]<piecesDistribution[cis])
-                    {
-                        cis = i;
-                    }
+                    ++cis;
                 }
             }
+            else
+            {
+                cis = r.Next(0, 7);
+            }
+
+
+            while (piecesDistribution[cis])
+            {
+                cis = r.Next(0, 7);
+            }
+
             
             switch (cis)
             {
                 case 0:
-                    ++ piecesDistribution[cis];
+                    piecesDistribution[cis] = true;
                     return new Ctverec();
                 case 1:
-                    ++piecesDistribution[cis];
+                    piecesDistribution[cis] = true;
                     return new Elko();
                 case 2:
-                    ++piecesDistribution[cis];
+                    piecesDistribution[cis] = true;
                     return new Esko();
                 case 3:
-                    ++piecesDistribution[cis];
+                    piecesDistribution[cis] = true;
                     return new Jecko();
                 case 4:
-                    ++piecesDistribution[cis];
+                    piecesDistribution[cis] = true;
                     return new Tecko();
                 case 5:
-                    ++piecesDistribution[cis];
+                    piecesDistribution[cis] = true;
                     return new Tyc();
                 case 6:
-                    ++piecesDistribution[cis];
+                    piecesDistribution[cis] = true;
                     return new Zetko();
                 default:
-                    ++piecesDistribution[cis];
                     return new Tyc();
             }
         }

@@ -170,10 +170,18 @@ namespace Tetris
                 }
                 q = new Queue();
                 int tempHoles = 0;
-                if (Pozice[i, 0] + clearLines[4] < 19 && deska[Pozice[i, 0] + 1 + clearLines[4], Pozice[i, 1]] == '\0')
+                int posunuti = 0;
+                for (int j = 0; j < clearLines[4]; j++)
                 {
-                    deska[Pozice[i, 0] + 1 + clearLines[4], Pozice[i, 1]] = 'C'; //oCCupied
-                    q.Insert(new int[2] { Pozice[i, 0] + 1 + clearLines[4], Pozice[i, 1] });
+                    if (clearLines[j] > Pozice[i,0])
+                    {
+                        posunuti++;
+                    }
+                }
+                if (Pozice[i, 0] + posunuti < 19 && deska[Pozice[i, 0] + 1 + posunuti, Pozice[i, 1]] == '\0')
+                {
+                    deska[Pozice[i, 0] + 1 + posunuti, Pozice[i, 1]] = 'C'; //oCCupied
+                    q.Insert(new int[2] { Pozice[i, 0] + 1 + posunuti, Pozice[i, 1] });
                     ++tempHoles;
                     while (q.Count())
                     {
@@ -213,7 +221,7 @@ namespace Tetris
                     }
                     if (tempHoles == 0)
                     {
-                        clearAfterBFS(deska, new int[2] { Pozice[i, 0] + 1 + clearLines[4], Pozice[i, 1] });
+                        clearAfterBFS(deska, new int[2] { Pozice[i, 0] + 1 + posunuti, Pozice[i, 1] });
                     }
                     else
                     {
@@ -289,7 +297,17 @@ namespace Tetris
                 {
                     continue;
                 }
-                while (clonePozice[i, 0] + 1 + clearLines[4] <= 19 && deska[clonePozice[i, 0] + 1 + clearLines[4], clonePozice[i, 1]] == '\0')
+
+                int posunuti = 0;
+                for (int j = 0; j < clearLines[4]; j++)
+                {
+                    if (clearLines[j] > Pozice[i, 0])
+                    {
+                        posunuti++;
+                    }
+                }
+
+                while (clonePozice[i, 0] + 1 + posunuti <= 19 && deska[clonePozice[i, 0] + 1 + posunuti, clonePozice[i, 1]] == '\0')
                 {
                     numOfSoftHoles++;
                     clonePozice[i, 0] += 1;
@@ -391,6 +409,22 @@ namespace Tetris
             {
                 deska[Pozice[i, 0], Pozice[i, 1]] = 'C';//oCCupied
             }
+
+            int[] clearLines = new int[5];
+            for (int i = 0; i < 4; i++)
+            {
+                if (checkLineFull(deska, Pozice[i, 0]))
+                {
+                    for (int j = 0; j < 10; j++)
+                    {
+                        deska[Pozice[i, 0], j] = '\0';
+                    }
+                    clearLines[clearLines[4]] = Pozice[i, 0];//using last array member is an index for puting the line number
+                    clearLines[4]++;
+                }
+            }
+            GameBoard.MoveMap(ref deska, clearLines);//budeme kontrolovat blokovane diry po odstranenych radach
+
             vyskaSloupu = new int[10];
             for (int i = 0; i < 10; i++)
             {
@@ -432,20 +466,28 @@ namespace Tetris
                 int hrbolatost = deltaHrbolatosti(ref gb, tempDrop);
                 //data
 
-                int tempScore = hardBlocked * 10 + softBlocked * 7 + diff * 5 - numLines * 3 + hrbolatost / 4;
+                int tempScore = hardBlocked * 9 + softBlocked * 7 + diff * 5 - numLines * 3 + hrbolatost / 4;
                 if (numLines>2)
                 {
+                    //test data
+                    Form1.test1 = hardBlocked * 9;
+                    Form1.test2 = softBlocked * 7;
+                    Form1.test3 = hrbolatost / 4;
+                    Form1.test4 = diff * 5;
+                    Form1.test5 = numLines * 3;
+
                     bestDrop = tempDrop;
                     break;
                 }
 
                 if (score > tempScore)
                 {
-                    Form1.test1 = hardBlocked * 10;
+                    //test data
+                    Form1.test1 = hardBlocked * 9;
                     Form1.test2 = softBlocked * 7;
-                    Form1.test3 = hrbolatost/4;
-                    Form1.test4 = diff*5;
-                    Form1.test5 = numLines*3;
+                    Form1.test3 = hrbolatost / 4;
+                    Form1.test4 = diff * 5;
+                    Form1.test5 = numLines * 3;
 
                     score = tempScore;
                     bestDrop = tempDrop;

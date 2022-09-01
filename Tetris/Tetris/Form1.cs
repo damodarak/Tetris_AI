@@ -40,7 +40,7 @@ namespace Tetris
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            if (activePiece==null)
+            if (activePiece==null || timer2.Enabled)
             {
                 return base.ProcessCmdKey(ref msg, keyData);
             }
