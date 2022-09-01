@@ -13,12 +13,15 @@ namespace Tetris
     public partial class Form1 : Form
     {
         System.Media.SoundPlayer player;
+        bool playing;
         //keypress event,, faster moving down, hudba, sound effects, sideBlocking
         public Form1()
         {
             InitializeComponent();
             tuzka = new Pen(Color.Black, 2);//barva, sirka
             clearLines = new int[5];
+            player = new System.Media.SoundPlayer(Properties.Resources.tetris_music);
+            playing = false;
         }
         Pen tuzka;
         Shape activePiece;
@@ -26,7 +29,7 @@ namespace Tetris
         GameBoard gb;
         int[] clearLines;
         bool gameOver;
-        int moveSpeed;
+        int moveSpeed;     
 
         //ai
         int[,] placeToDropFrom;
@@ -106,6 +109,19 @@ namespace Tetris
 
         private void timer1_Tick(object sender, EventArgs e)
         {
+            if (checkBox1.Checked != playing)
+            {
+                playing = checkBox1.Checked;
+                if (playing)
+                {
+                    player.PlayLooping();
+                }
+                else
+                {
+                    player.Stop();
+                }
+            }
+
             if (timer1.Interval == 201)
             {
                 pictureBox1.Invalidate();
@@ -180,6 +196,12 @@ namespace Tetris
         }
         private void button1_Click_1(object sender, EventArgs e)
         {
+            if (checkBox1.Checked)
+            {
+                playing = true;
+                player.PlayLooping();
+            }
+
             timer2.Enabled = false;
             clearLines = new int[5];
             timer1.Enabled = false;
@@ -194,9 +216,13 @@ namespace Tetris
         }
 
         private void button3_Click(object sender, EventArgs e)
-        {
-            player = new System.Media.SoundPlayer(Properties.Resources.tetris_music);
-            player.PlayLooping();
+        {         
+            if (checkBox1.Checked)
+            {
+                playing = true;
+                player.PlayLooping();
+            }
+            
             placeToDropFrom = new int[5, 2];
             timer1.Enabled = false;
             timer2.Enabled = false;
@@ -216,6 +242,19 @@ namespace Tetris
         {
             pictureBox1.Invalidate();
             pictureBox3.Invalidate();
+
+            if (checkBox1.Checked != playing)
+            {
+                playing = checkBox1.Checked;
+                if (playing)
+                {
+                    player.PlayLooping();
+                }
+                else
+                {
+                    player.Stop();
+                }
+            }
 
             if (!HardDropAI.PlayNextMove(ref gb, activePiece, placeToDropFrom))
             {
