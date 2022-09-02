@@ -103,21 +103,20 @@ namespace Tetris
         }
         public int[] FindFullLines(Shape shp)
         {
-            dynamic tvar = shp;
             int[] konec = new int[5];
             int j;
             for (int i = 0; i < 4; i++)
             {
                 for (j = 0; j < 10; j++)
                 {
-                    if (this.Board[tvar.Pozice[i,0],j] == '\0')
+                    if (this.Board[shp.Pozice[i,0],j] == '\0')
                     {
                         break;
                     }
                 }
-                if (j==10 && !contains(konec,tvar.Pozice[i,0]))
+                if (j==10 && !contains(konec,shp.Pozice[i,0]))
                 {
-                    konec[konec[4]] = tvar.Pozice[i, 0];
+                    konec[konec[4]] = shp.Pozice[i, 0];
                     ++konec[4];                   
                 }
             }

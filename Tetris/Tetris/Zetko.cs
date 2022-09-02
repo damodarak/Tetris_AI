@@ -9,7 +9,6 @@ namespace Tetris
     class Zetko : Shape
     {
         public char Color = 'G';
-        public int[,] Pozice;
         int rotNum;
         public Zetko()
         {
@@ -36,7 +35,7 @@ namespace Tetris
         }
         public override bool MoveDown(ref GameBoard gb)
         {
-            if (checkDownSide(ref gb, Pozice))
+            if (checkDownSide(ref gb))
             {
                 for (int i = 0; i < 4; i++)
                 {
@@ -51,7 +50,7 @@ namespace Tetris
         }
         public override bool MoveLeft(ref GameBoard gb)
         {
-            if (checkLeftSide(ref gb, Pozice))
+            if (checkLeftSide(ref gb))
             {
                 for (int i = 0; i < 4; i++)
                 {
@@ -66,7 +65,7 @@ namespace Tetris
         }
         public override bool MoveRight(ref GameBoard gb)
         {
-            if (checkRightSide(ref gb, Pozice))
+            if (checkRightSide(ref gb))
             {
                 for (int i = 0; i < 4; i++)
                 {

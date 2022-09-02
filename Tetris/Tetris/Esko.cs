@@ -9,7 +9,6 @@ namespace Tetris
     class Esko : Shape
     {
         public char Color = 'L';
-        public int[,] Pozice;
         int rotNum;
         public Esko()
         {
@@ -35,7 +34,7 @@ namespace Tetris
         }
         public override bool MoveDown(ref GameBoard gb)
         {
-            if (checkDownSide(ref gb, Pozice))
+            if (checkDownSide(ref gb))
             {
                 for (int i = 0; i < 4; i++)
                 {
@@ -50,7 +49,7 @@ namespace Tetris
         }
         public override bool MoveLeft(ref GameBoard gb)
         {
-            if (checkLeftSide(ref gb, Pozice))
+            if (checkLeftSide(ref gb))
             {
                 for (int i = 0; i < 4; i++)
                 {
@@ -65,7 +64,7 @@ namespace Tetris
         }
         public override bool MoveRight(ref GameBoard gb)
         {
-            if (checkRightSide(ref gb, Pozice))
+            if (checkRightSide(ref gb))
             {
                 for (int i = 0; i < 4; i++)
                 {

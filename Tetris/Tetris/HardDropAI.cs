@@ -8,7 +8,6 @@ namespace Tetris
 {
     static class HardDropAI
     {
-        //add bocni HardBloky
         static private int[,,] findAllHardDrops(ref GameBoard gb, Shape shp)
         {
             int[,,] konec;
@@ -119,22 +118,21 @@ namespace Tetris
             }
             return konec;
         }
-        static private void leftToRightHardDrop(ref GameBoard gb, Shape tvar, int od, int kam, ref int[,,] konec)
+        static private void leftToRightHardDrop(ref GameBoard gb, Shape shp, int od, int kam, ref int[,,] konec)
         {
-            dynamic tvr = tvar;
             for (int i = od; i < kam; i++)
             {
-                int[,] hardDrop = tvar.FakeHardDrop(ref gb, tvr.Pozice);
+                int[,] hardDrop = shp.FakeHardDrop(ref gb);
                 for (int j = 0; j < 4; j++)
                 {
                     konec[i, j, 0] = hardDrop[j, 0];
                     konec[i, j, 1] = hardDrop[j, 1];
                 }
-                tvar.MoveRight(ref gb);
+                shp.MoveRight(ref gb);
             }
             for (int i = od; i < kam; i++)
             {
-                tvar.MoveLeft(ref gb);
+                shp.MoveLeft(ref gb);
             }
         }
         static private int checkBlockedHoles(ref GameBoard gb, int[,] Pozice)
@@ -504,23 +502,22 @@ namespace Tetris
         }
         static public bool PlayNextMove(ref GameBoard gb, Shape shp, int[,] finishPoz)
         {
-            dynamic tvar = shp;
-            if (tvar.Pozice[0,0] < 2 || tvar.Pozice[1,0] < 2 || tvar.Pozice[2,0] < 2 || tvar.Pozice[3,0] < 2)
+            if (shp.Pozice[0,0] < 2 || shp.Pozice[1,0] < 2 || shp.Pozice[2,0] < 2 || shp.Pozice[3,0] < 2)
             {               
-                return tvar.MoveDown(ref gb);
+                return shp.MoveDown(ref gb);
             }
             else if (finishPoz[4, 0] > 0 && finishPoz[4,0] <=3)
             {               
                 finishPoz[4, 0]--;
-                return tvar.RotRight(ref gb);
+                return shp.RotRight(ref gb);
             }
             else if (finishPoz[4, 0] == 0)
             {
-                if (samePozice(tvar.Pozice, finishPoz))
+                if (samePozice(shp.Pozice, finishPoz))
                 {
                     finishPoz[4, 0] = 200;
                 }
-                else if (findDirect(tvar.Pozice, finishPoz))
+                else if (findDirect(shp.Pozice, finishPoz))
                 {
                     finishPoz[4, 0] = -100;//doleva
                 }
@@ -531,26 +528,26 @@ namespace Tetris
             }
 
 
-            if (samePozice(tvar.Pozice, finishPoz))
+            if (samePozice(shp.Pozice, finishPoz))
             {
                 finishPoz[4, 0] = 200;
             }
 
             if (finishPoz[4,0] == -100)
             {
-                if (!tvar.MoveLeft(ref gb))
+                if (!shp.MoveLeft(ref gb))
                 {
                     finishPoz[4, 0] = 200;
-                    return tvar.MoveDown(ref gb);
+                    return shp.MoveDown(ref gb);
                 }
             }
             else if (finishPoz[4, 0] == 200)//if signal for moving down is set
             {
-                return tvar.MoveDown(ref gb);
+                return shp.MoveDown(ref gb);
             }
             else if (finishPoz[4,0] == 100)
             {               
-                return tvar.MoveRight(ref gb);
+                return shp.MoveRight(ref gb);
             }
             return true;//just to calm down visual studio
         }
