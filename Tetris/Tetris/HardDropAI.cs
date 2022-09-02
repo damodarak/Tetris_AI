@@ -191,30 +191,7 @@ namespace Tetris
                         }
                         else
                         {
-                            if (coord[0] - 1 >= 2 && deska[coord[0] - 1, coord[1]] == '\0')
-                            {
-                                ++tempHoles;
-                                deska[coord[0] - 1, coord[1]] = 'C';
-                                q.Insert(new int[2] { coord[0] - 1, coord[1] });
-                            }
-                            if (coord[0] + 1 <= 19 && deska[coord[0] + 1, coord[1]] == '\0')
-                            {
-                                ++tempHoles;
-                                deska[coord[0] + 1, coord[1]] = 'C';
-                                q.Insert(new int[2] { coord[0] + 1, coord[1] });
-                            }
-                            if (coord[1] - 1 >= 0 && deska[coord[0], coord[1] - 1] == '\0')
-                            {
-                                ++tempHoles;
-                                deska[coord[0], coord[1] - 1] = 'C';
-                                q.Insert(new int[2] { coord[0], coord[1] - 1 });
-                            }
-                            if (coord[1] + 1 <= 9 && deska[coord[0], coord[1] + 1] == '\0')
-                            {
-                                ++tempHoles;
-                                deska[coord[0], coord[1] + 1] = 'C';
-                                q.Insert(new int[2] { coord[0], coord[1] + 1 });
-                            }
+                            BFS(q, deska, '\0', 'C', coord, ref tempHoles);
                         }
                     }
                     if (tempHoles == 0)
@@ -229,37 +206,46 @@ namespace Tetris
             }
             return numOfHoles;
         }
-        static private void clearAfterBFS(char[,] deska, int[] coord)
+        static public void clearAfterBFS(char[,] deska, int[] coord)
         {
             Queue q = new Queue();
             deska[coord[0], coord[1]] = '\0';
             q.Insert(coord);
-            while (q.Count())
+            int uselessNum = 0;
+            while(q.Count())
             {
-                int[] souradnice = q.Pop();
-                if (souradnice[0] - 1 >= 2 && deska[souradnice[0] - 1, souradnice[1]] == 'C')
-                {
-                    deska[souradnice[0] - 1, souradnice[1]] = '\0';
-                    q.Insert(new int[2] { souradnice[0] - 1, souradnice[1] });
-                }
-                if (souradnice[0] + 1 <= 19 && deska[souradnice[0] + 1, souradnice[1]] == 'C')
-                {
-                    deska[souradnice[0] + 1, souradnice[1]] = '\0';
-                    q.Insert(new int[2] { souradnice[0] + 1, souradnice[1] });
-                }
-                if (souradnice[1] - 1 >= 0 && deska[souradnice[0], souradnice[1] - 1] == 'C')
-                {
-                    deska[souradnice[0], souradnice[1] - 1] = '\0';
-                    q.Insert(new int[2] { souradnice[0], souradnice[1] - 1 });
-                }
-                if (souradnice[1] + 1 <= 9 && deska[souradnice[0], souradnice[1] + 1] == 'C')
-                {
-                    deska[souradnice[0], souradnice[1] + 1] = '\0';
-                    q.Insert(new int[2] { souradnice[0], souradnice[1] + 1 });
-                }
+                int[] block = q.Pop();
+                BFS(q, deska, 'C', '\0', block, ref uselessNum);
+            }          
+        }
+        static public void BFS(Queue q, char[,] deska, char searchChar, char changeChar, int[] souradnice, ref int holes)
+        {
+            if (souradnice[0] - 1 >= 2 && deska[souradnice[0] - 1, souradnice[1]] == searchChar)
+            {
+                ++holes;
+                deska[souradnice[0] - 1, souradnice[1]] = changeChar;
+                q.Insert(new int[2] { souradnice[0] - 1, souradnice[1] });
+            }
+            if (souradnice[0] + 1 <= 19 && deska[souradnice[0] + 1, souradnice[1]] == searchChar)
+            {
+                ++holes;
+                deska[souradnice[0] + 1, souradnice[1]] = changeChar;
+                q.Insert(new int[2] { souradnice[0] + 1, souradnice[1] });
+            }
+            if (souradnice[1] - 1 >= 0 && deska[souradnice[0], souradnice[1] - 1] == searchChar)
+            {
+                ++holes;
+                deska[souradnice[0], souradnice[1] - 1] = changeChar;
+                q.Insert(new int[2] { souradnice[0], souradnice[1] - 1 });
+            }
+            if (souradnice[1] + 1 <= 9 && deska[souradnice[0], souradnice[1] + 1] == searchChar)
+            {
+                ++holes;
+                deska[souradnice[0], souradnice[1] + 1] = changeChar;
+                q.Insert(new int[2] { souradnice[0], souradnice[1] + 1 });
             }
         }
-        static private int checkSoftBlockedHoles(ref GameBoard gb, int[,] Pozice, int hardBlocked)
+        static public int checkSoftBlockedHoles(ref GameBoard gb, int[,] Pozice, int hardBlocked)
         {
             if (hardBlocked>0)
             {
@@ -313,7 +299,7 @@ namespace Tetris
             }
             return numOfSoftHoles;
         }
-        static private int checkHeightDiff(ref GameBoard gb, int[,] Pozice)
+        static public int checkHeightDiff(ref GameBoard gb, int[,] Pozice)
         {
             int height = boardHeight(ref gb);
             int heighestBlock = 0;
@@ -348,7 +334,7 @@ namespace Tetris
             }
             return true;
         }
-        static private bool checkLineFull(char[,] deska, int lineNum)
+        static public bool checkLineFull(char[,] deska, int lineNum)
         {
             for (int i = 0; i < 10; i++)
             {
@@ -359,7 +345,7 @@ namespace Tetris
             }
             return true;
         }
-        static private int checkFullLines(ref GameBoard gb, int[,] Pozice)
+        static public int checkFullLines(ref GameBoard gb, int[,] Pozice)
         {
             int fullLines = 0;
             int[] checkedLines = new int[4];
@@ -381,7 +367,7 @@ namespace Tetris
             }
             return fullLines;
         }
-        static private int deltaHrbolatosti(ref GameBoard gb, int[,] Pozice)
+        static public int deltaHrbolatosti(ref GameBoard gb, int[,] Pozice)
         {
             int[] vyskaSloupu = new int[10];
             for (int i = 0; i < 10; i++)

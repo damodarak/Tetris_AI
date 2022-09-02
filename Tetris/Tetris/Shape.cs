@@ -16,7 +16,7 @@ namespace Tetris
             return (
                 Pozice[0, 0] != 19 && Pozice[1, 0] != 19 &&
                 Pozice[2, 0] != 19 && Pozice[3, 0] != 19 &&
-                (gb.Board[Pozice[0, 0] + 1, Pozice[0, 1]] != 'F' || gb.Board[Pozice[1, 0] + 1, Pozice[1, 1]] !=  'F' ||
+                (gb.Board[Pozice[0, 0] + 1, Pozice[0, 1]] != 'F' || gb.Board[Pozice[1, 0] + 1, Pozice[1, 1]] != 'F' ||
                 gb.Board[Pozice[2, 0] + 1, Pozice[2, 1]] != 'F' || gb.Board[Pozice[3, 0] + 1, Pozice[3, 1]] != 'F') &&
                 (gb.Board[Pozice[0, 0] + 1, Pozice[0, 1]] == '\0' || gb.Board[Pozice[0, 0] + 1, Pozice[0, 1]] == 'F') &&
                 (gb.Board[Pozice[1, 0] + 1, Pozice[1, 1]] == '\0' || gb.Board[Pozice[1, 0] + 1, Pozice[1, 1]] == 'F') &&
@@ -82,6 +82,17 @@ namespace Tetris
             {
                 gb.Board[Pozice[i, 0], Pozice[i, 1]] = 'F';//tetris dFs
             }
+        }
+        public bool MoveDownNotPossible(ref GameBoard gb)
+        {
+            return (
+               Pozice[0, 0] == 19 || Pozice[1, 0] == 19 ||
+               Pozice[2, 0] == 19 || Pozice[3, 0] == 19 ||
+               (gb.Board[Pozice[0, 0] + 1, Pozice[0, 1]] != '\0' && gb.Board[Pozice[0, 0] + 1, Pozice[0, 1]] != 'F') ||
+               (gb.Board[Pozice[1, 0] + 1, Pozice[1, 1]] != '\0' && gb.Board[Pozice[1, 0] + 1, Pozice[1, 1]] != 'F') ||
+               (gb.Board[Pozice[2, 0] + 1, Pozice[2, 1]] != '\0' && gb.Board[Pozice[2, 0] + 1, Pozice[2, 1]] != 'F') ||
+               (gb.Board[Pozice[3, 0] + 1, Pozice[3, 1]] != '\0' && gb.Board[Pozice[3, 0] + 1, Pozice[3, 1]] != 'F'));
+
         }
     }
 }

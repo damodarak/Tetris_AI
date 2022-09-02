@@ -14,7 +14,7 @@ namespace Tetris
     {
         System.Media.SoundPlayer player;
         bool playing;
-        //keypress event,, faster moving down, hudba, sound effects, sideBlocking
+
         public Form1()
         {
             InitializeComponent();
@@ -31,7 +31,7 @@ namespace Tetris
         bool gameOver;
         int moveSpeed;     
 
-        //ai
+        //HardDropAI
         int[,] placeToDropFrom;
 
         //for testing purpose
@@ -273,6 +273,30 @@ namespace Tetris
                 placeToDropFrom = HardDropAI.FindBestPlaceForDrop(ref gb, activePiece);
                 updateInfo();
             }         
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked)
+            {
+                playing = true;
+                player.PlayLooping();
+            }
+
+            timer1.Enabled = false;
+            timer2.Enabled = false;
+            clearLines = new int[5];
+            activePiece = GameBoard.GeneratePiece();
+            nextPiece = GameBoard.GeneratePiece();
+            pictureBox1.Invalidate();
+            pictureBox3.Invalidate();
+            gb = new GameBoard();
+
+            //string nav = AI.findBestPosition(ref gb, activePiece, nextPiece);
+
+            updateInfo();
+            gameOver = false;
+            //timer2.Enabled = true;
         }
     }
 }

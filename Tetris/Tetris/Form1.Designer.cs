@@ -55,6 +55,7 @@ namespace Tetris
             this.label15 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.button4 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -290,11 +291,22 @@ namespace Tetris
             this.checkBox1.Text = "sound";
             this.checkBox1.UseVisualStyleBackColor = true;
             // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(513, 310);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(102, 63);
+            this.button4.TabIndex = 23;
+            this.button4.Text = "Imporved AI";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
             // Form1
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
             this.ClientSize = new System.Drawing.Size(894, 707);
+            this.Controls.Add(this.button4);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.label16);
             this.Controls.Add(this.label15);
@@ -359,6 +371,7 @@ namespace Tetris
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.Button button4;
     }
 }
 

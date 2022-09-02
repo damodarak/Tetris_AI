@@ -14,7 +14,7 @@ namespace Tetris
         public VagonPozic(string navigace, int[,] Pozic, VagonPozic next)
         {
             this.navigace = navigace;
-            this.Pozic = Pozic;
+            this.Pozic = (int[,])Pozic.Clone();
             this.next = next;
         }
     }

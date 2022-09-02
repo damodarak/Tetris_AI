@@ -15,16 +15,9 @@ namespace Tetris
             this.head = null;
             count = 0;
         }
-        public bool Count()
+        public int Count()
         {
-            if (count > 0)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return this.count;
         }
         public void Insert(int[,] val, string navigace)
         {
@@ -39,9 +32,10 @@ namespace Tetris
             }
             ++this.count;
         }
-        public int[,] Pop()
+        public InfoBlock Pop()
         {
-            int[,] konec = this.head.Pozic;
+            int[,] pozice = this.head.Pozic;
+            string nav = this.head.navigace;
             if (this.count == 1)
             {
                 this.head = null;
@@ -51,7 +45,7 @@ namespace Tetris
                 this.head = this.head.next;
             }
             --this.count;
-            return konec;
+            return new InfoBlock(nav, pozice);
         }
     }
 }
