@@ -54,10 +54,9 @@ namespace Tetris
         }
         static public void DrawShape(Shape shp, Graphics grafika, Pen tuzka)
         {
-            dynamic tvar = shp;
             for (int i = 0; i < 4; i++)
             {
-                DrawRect(grafika, tuzka, tvar.Color, tvar.Pozice[i, 0] - 2, tvar.Pozice[i, 1]);
+                DrawRect(grafika, tuzka, shp.Color, shp.Pozice[i, 0] - 2, shp.Pozice[i, 1]);
             }
         }
         static public void DrawMap(ref GameBoard gb, Graphics grafika, Pen tuzka)
@@ -77,10 +76,9 @@ namespace Tetris
         }
         static public void DrawNextPiece(Shape shp, Graphics grafika, Pen tuzka)
         {
-            dynamic tvar = shp;
             for (int i = 0; i < 4; i++)
             {
-                DrawRect(grafika, tuzka, tvar.Color, tvar.Pozice[i, 0] - 1, tvar.Pozice[i, 1]-2);
+                DrawRect(grafika, tuzka, shp.Color, shp.Pozice[i, 0] - 1, shp.Pozice[i, 1]-2);
             }
         }
     }

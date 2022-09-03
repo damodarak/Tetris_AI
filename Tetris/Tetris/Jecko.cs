@@ -8,7 +8,6 @@ namespace Tetris
 {
     class Jecko : Shape
     {
-        public char Color = 'V';
         private int[,] rotationHack;
         private int[] stred;
         private int rotNum;
@@ -20,6 +19,7 @@ namespace Tetris
             stred = new int[2] { 2, 4 };
             rotNum = 1;
             rotHackNum = 0;
+            Color = 'V';
         }
         private bool checkRotRight(ref GameBoard gb)
         {

@@ -8,7 +8,6 @@ namespace Tetris
 {
     class Tecko : Shape
     {
-        public char Color = 'Y';
         private int[] stred;
         private int[,] poziceDiry;
         int rotNum;
@@ -18,6 +17,7 @@ namespace Tetris
             stred = new int[2] { 2, 4 };
             poziceDiry = new int[4, 2] { { -1, 0 }, { 0, 1 }, { 1, 0 }, { 0, -1 } };
             rotNum = 0;
+            Color = 'Y';
         }
         private bool checkRot(ref GameBoard gb)
         {

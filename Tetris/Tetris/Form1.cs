@@ -34,6 +34,10 @@ namespace Tetris
         //HardDropAI
         int[,] placeToDropFrom;
 
+        //ImporvedAI
+        string nav;
+        int stepNum;
+
         //for testing purpose
         static public int test1 = 0;
         static public int test2 = 0;
@@ -202,6 +206,7 @@ namespace Tetris
                 player.PlayLooping();
             }
 
+            timer3.Enabled = false;
             timer2.Enabled = false;
             clearLines = new int[5];
             timer1.Enabled = false;
@@ -226,6 +231,7 @@ namespace Tetris
             placeToDropFrom = new int[5, 2];
             timer1.Enabled = false;
             timer2.Enabled = false;
+            timer3.Enabled = false;
             clearLines = new int[5];
             activePiece = GameBoard.GeneratePiece();
             nextPiece = GameBoard.GeneratePiece();
@@ -263,8 +269,7 @@ namespace Tetris
                     timer2.Enabled = false;
                     gameOver = true;
                     player.Stop();
-                }
-                gb.AddToBoard(activePiece);              
+                }             
                 clearLines = gb.FindFullLines(activePiece);
                 GameBoard.ClearLines(ref gb, clearLines);
                 GameBoard.MoveMap(ref gb.Board, clearLines);
@@ -285,6 +290,7 @@ namespace Tetris
 
             timer1.Enabled = false;
             timer2.Enabled = false;
+            timer3.Enabled = false;
             clearLines = new int[5];
             activePiece = GameBoard.GeneratePiece();
             nextPiece = GameBoard.GeneratePiece();
@@ -292,11 +298,54 @@ namespace Tetris
             pictureBox3.Invalidate();
             gb = new GameBoard();
 
-            //string nav = AI.findBestPosition(ref gb, activePiece, nextPiece);
+            nav = AI.findBestPosition(ref gb, activePiece, nextPiece);
+            stepNum = 0;
+
 
             updateInfo();
             gameOver = false;
-            //timer2.Enabled = true;
+            timer3.Enabled = true;
+        }
+
+        private void timer3_Tick(object sender, EventArgs e)
+        {
+            pictureBox1.Invalidate();
+            pictureBox3.Invalidate();
+
+            if (checkBox1.Checked != playing)
+            {
+                playing = checkBox1.Checked;
+                if (playing)
+                {
+                    player.PlayLooping();
+                }
+                else
+                {
+                    player.Stop();
+                }
+            }
+
+            if (!AI.PlayNextMove(ref gb, activePiece, nav, stepNum))
+            {
+                if (!gb.AddToBoard(activePiece))
+                {
+                    timer3.Enabled = false;
+                    gameOver = true;
+                    player.Stop();
+                }
+                clearLines = gb.FindFullLines(activePiece);
+                GameBoard.ClearLines(ref gb, clearLines);
+                GameBoard.MoveMap(ref gb.Board, clearLines);
+                activePiece = nextPiece;
+                nextPiece = GameBoard.GeneratePiece();
+                nav = AI.findBestPosition(ref gb, activePiece, nextPiece);
+                stepNum = 0;
+                updateInfo();
+            }
+            else
+            {
+                ++stepNum;
+            }
         }
     }
 }

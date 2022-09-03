@@ -8,10 +8,10 @@ namespace Tetris
 {
     class Ctverec : Shape
     {
-        public char Color = 'R';
         public Ctverec()
         {
             Pozice = new int[4, 2] { { 2, 4, }, { 2, 5 }, { 3, 4 }, { 3, 5 } };
+            Color = 'R';
         }
         public override void MoveUp()
         {

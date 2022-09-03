@@ -8,12 +8,12 @@ namespace Tetris
 {
     class Zetko : Shape
     {
-        public char Color = 'G';
         int rotNum;
         public Zetko()
         {
             Pozice = new int[4, 2] { { 2, 3 }, { 2, 4, }, { 3, 4 }, { 3, 5 } };
             rotNum = 0;
+            Color = 'G';
         }
         private bool checkRotZero(ref GameBoard gb)
         {

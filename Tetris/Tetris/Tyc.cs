@@ -8,12 +8,12 @@ namespace Tetris
 {
     class Tyc : Shape
     {
-        public char Color = 'O';
         private int rotNum;
         public Tyc()
         {
             Pozice = new int[4, 2] { { 2, 3, }, { 2, 4 }, { 2, 5 }, { 2, 6 } };
             rotNum = 0;
+            Color = 'O';
         }
         private bool checkRotZero(ref GameBoard gb)
         {

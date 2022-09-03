@@ -56,6 +56,7 @@ namespace Tetris
             this.label16 = new System.Windows.Forms.Label();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.button4 = new System.Windows.Forms.Button();
+            this.timer3 = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -301,6 +302,11 @@ namespace Tetris
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
+            // timer3
+            // 
+            this.timer3.Interval = 20;
+            this.timer3.Tick += new System.EventHandler(this.timer3_Tick);
+            // 
             // Form1
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -372,6 +378,7 @@ namespace Tetris
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Timer timer3;
     }
 }
 

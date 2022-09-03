@@ -11,8 +11,7 @@ namespace Tetris
         static private int[,,] findAllHardDrops(ref GameBoard gb, Shape shp)
         {
             int[,,] konec;
-            dynamic tvar = shp;
-            switch (tvar.Color)
+            switch (shp.Color)
             {
                 case 'O':
                     konec = new int[17, 4, 3];// konec[i,0,2] je pocet rotaci, zbytek nic neznamena
@@ -41,30 +40,30 @@ namespace Tetris
             }
             for (int i = 0; i < 4; i++)
             {
-                tvar.MoveLeft(ref gb);
+                shp.MoveLeft(ref gb);
             }
             switch (konec.GetLength(0))
             {
                 case 9:
-                    leftToRightHardDrop(ref gb, tvar, 0, 9, ref konec);
+                    leftToRightHardDrop(ref gb, shp, 0, 9, ref konec);
                     for (int i = 0; i < 4; i++)
                     {
-                        tvar.MoveRight(ref gb);
+                        shp.MoveRight(ref gb);
                     }
                     break;
                 case 17:
-                    if (tvar.Color == 'O')
+                    if (shp.Color == 'O')
                     {
                         for (int i = 7; i < 17; i++)
                         {
                             konec[i, 0, 2] = 1;
                         }
-                        leftToRightHardDrop(ref gb, tvar, 0, 7, ref konec);
-                        tvar.RotRight(ref gb);
-                        tvar.MoveLeft(ref gb);
-                        leftToRightHardDrop(ref gb, tvar, 7, 17, ref konec);
-                        tvar.MoveRight(ref gb);
-                        tvar.RotRight(ref gb);
+                        leftToRightHardDrop(ref gb, shp, 0, 7, ref konec);
+                        shp.RotRight(ref gb);
+                        shp.MoveLeft(ref gb);
+                        leftToRightHardDrop(ref gb, shp, 7, 17, ref konec);
+                        shp.MoveRight(ref gb);
+                        shp.RotRight(ref gb);
                     }
                     else
                     {
@@ -72,16 +71,16 @@ namespace Tetris
                         {
                             konec[i, 0, 2] = 1;
                         }
-                        leftToRightHardDrop(ref gb, tvar, 0, 8, ref konec);
-                        tvar.RotRight(ref gb);
-                        tvar.MoveLeft(ref gb);
-                        leftToRightHardDrop(ref gb, tvar, 8, 17, ref konec);
-                        tvar.MoveRight(ref gb);
-                        tvar.RotRight(ref gb);
+                        leftToRightHardDrop(ref gb, shp, 0, 8, ref konec);
+                        shp.RotRight(ref gb);
+                        shp.MoveLeft(ref gb);
+                        leftToRightHardDrop(ref gb, shp, 8, 17, ref konec);
+                        shp.MoveRight(ref gb);
+                        shp.RotRight(ref gb);
                     }
                     for (int i = 0; i < 3; i++)
                     {
-                        tvar.MoveRight(ref gb);
+                        shp.MoveRight(ref gb);
                     }
                     break;
                 case 34:
@@ -97,20 +96,20 @@ namespace Tetris
                     {
                         konec[i, 0, 2] = 3;
                     }
-                    leftToRightHardDrop(ref gb, tvar, 0, 8, ref konec);
-                    tvar.RotRight(ref gb);
-                    tvar.MoveLeft(ref gb);
-                    leftToRightHardDrop(ref gb, tvar, 8, 17, ref konec);
-                    tvar.RotRight(ref gb);
-                    leftToRightHardDrop(ref gb, tvar, 17, 25, ref konec);
-                    tvar.RotRight(ref gb);
-                    tvar.MoveLeft(ref gb);
-                    leftToRightHardDrop(ref gb, tvar, 25, 34, ref konec);
-                    tvar.MoveRight(ref gb);
-                    tvar.RotRight(ref gb);
+                    leftToRightHardDrop(ref gb, shp, 0, 8, ref konec);
+                    shp.RotRight(ref gb);
+                    shp.MoveLeft(ref gb);
+                    leftToRightHardDrop(ref gb, shp, 8, 17, ref konec);
+                    shp.RotRight(ref gb);
+                    leftToRightHardDrop(ref gb, shp, 17, 25, ref konec);
+                    shp.RotRight(ref gb);
+                    shp.MoveLeft(ref gb);
+                    leftToRightHardDrop(ref gb, shp, 25, 34, ref konec);
+                    shp.MoveRight(ref gb);
+                    shp.RotRight(ref gb);
                     for (int i = 0; i < 3; i++)
                     {
-                        tvar.MoveRight(ref gb);
+                        shp.MoveRight(ref gb);
                     }
                     break;
                 default:
@@ -303,11 +302,41 @@ namespace Tetris
         {
             int height = boardHeight(ref gb);
             int heighestBlock = 0;
+            GameBoard gbnew = gb.Copy();
             for (int i = 0; i < 4; i++)
             {
-                if ((20 - Pozice[i,0]) > heighestBlock)
+                gbnew.Board[Pozice[i, 0], Pozice[i, 1]] = 'C';//oCCupied
+            }
+
+            int[] clearLines = new int[5];
+            for (int i = 0; i < 4; i++)
+            {
+                if (checkLineFull(gbnew.Board, Pozice[i, 0]))
                 {
-                    heighestBlock = 20 - Pozice[i, 0];
+                    clearLines[clearLines[4]] = Pozice[i, 0];//using last array member is an index for puting the line number
+                    clearLines[4]++;
+                }
+            }
+
+            for (int i = 0; i < 4; i++)
+            {
+                if (GameBoard.contains(clearLines, Pozice[i, 0]))
+                {
+                    continue;
+                }
+
+                int posunuti = 0;
+                for (int j = 0; j < clearLines[4]; j++)
+                {
+                    if (clearLines[j] > Pozice[i, 0])
+                    {
+                        posunuti++;
+                    }
+                }
+
+                if ((20 - Pozice[i, 0] - posunuti) > heighestBlock)
+                {
+                    heighestBlock = 20 - Pozice[i, 0] - posunuti;
                 }
             }
             int diff = heighestBlock - height;

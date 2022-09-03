@@ -8,12 +8,12 @@ namespace Tetris
 {
     class Esko : Shape
     {
-        public char Color = 'L';
         int rotNum;
         public Esko()
         {
             Pozice = new int[4, 2] { { 3, 3 }, { 2, 4, }, { 2, 5 }, { 3, 4 } };
             rotNum = 0;
+            Color = 'L';
         }
         private bool checkRotZero(ref GameBoard gb)
         {

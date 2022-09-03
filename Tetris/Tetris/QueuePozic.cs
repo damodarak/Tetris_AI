@@ -6,29 +6,40 @@ using System.Threading.Tasks;
 
 namespace Tetris
 {
-    class Stack
+    class QueuePozic
     {
         VagonPozic head;
+        VagonPozic tail;
         int count;
-        public Stack()
+        public QueuePozic()
         {
             this.head = null;
+            this.tail = null;
             count = 0;
         }
-        public int Count()
+        public bool Count()
         {
-            return this.count;
+            if (count > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
         public void Insert(int[,] val, string navigace)
         {
             if (this.head == null)
             {
                 this.head = new VagonPozic(navigace, val, null);
+                this.tail = this.head;
             }
             else
             {
-                VagonPozic pom = new VagonPozic(navigace, val, head);
-                this.head = pom;
+                VagonPozic pom = new VagonPozic(navigace, val, null);
+                this.tail.next = pom;
+                this.tail = pom;
             }
             ++this.count;
         }
@@ -37,11 +48,13 @@ namespace Tetris
             if (this.head == null)
             {
                 this.head = new VagonPozic(ib.StringValue, ib.ArrayValue, null);
+                this.tail = this.head;
             }
             else
             {
-                VagonPozic pom = new VagonPozic(ib.StringValue, ib.ArrayValue, head);
-                this.head = pom;
+                VagonPozic pom = new VagonPozic(ib.StringValue, ib.ArrayValue, null);
+                this.tail.next = pom;
+                this.tail = pom;
             }
             ++this.count;
         }
@@ -49,9 +62,9 @@ namespace Tetris
         {
             int[,] pozice = this.head.Pozic;
             string nav = this.head.navigace;
-            if (this.count == 1)
+            if (this.tail == this.head)
             {
-                this.head = null;
+                this.tail = this.head = null;
             }
             else
             {

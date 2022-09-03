@@ -8,8 +8,11 @@ namespace Tetris
 {
     static class AI
     {
+        //naprosto zbytecne a z nejakeho duvodu nefunkcni DFS
         static private void tetrisDFS(ref GameBoard gb, Shape shp, Stack st, string navigace, char fromWhere)
         {
+            //SHIT METHOD
+            //AVOID!!!
             if (shp.MoveDownNotPossible(ref gb))
             {
                 st.Insert(shp.Pozice, navigace);
@@ -36,6 +39,66 @@ namespace Tetris
                 }               
             }
         }
+        static private void tetrisBFS(ref GameBoard gb, Shape shp, Stack positions, int numRots)
+        {
+            QueuePozic qp = new QueuePozic();
+            string start = "";
+            for (int i = 0; i < numRots; i++)
+            {
+                start += 'G';
+            }
+            qp.Insert(shp.Pozice, start);
+            markVisited(ref gb, shp.Pozice);
+            while (qp.Count())
+            {
+                InfoBlock ib = qp.Pop();
+                if (Shape.MoveDownNotPossible(ref gb, ib.ArrayValue))
+                {
+                    positions.Insert(ib);
+                }
+
+                if (Shape.checkLeftSide(ref gb, ib.ArrayValue))
+                {
+                    int[,] insert = new int[4, 2];
+                    for (int i = 0; i < 4; i++)
+                    {
+                        insert[i, 0] = ib.ArrayValue[i, 0];
+                        insert[i, 1] = ib.ArrayValue[i, 1] - 1;
+                    }
+                    qp.Insert(insert, ib.StringValue + 'L');
+                    markVisited(ref gb, insert);
+                }
+                if (Shape.checkRightSide(ref gb, ib.ArrayValue))
+                {
+                    int[,] insert = new int[4, 2];
+                    for (int i = 0; i < 4; i++)
+                    {
+                        insert[i, 0] = ib.ArrayValue[i, 0];
+                        insert[i, 1] = ib.ArrayValue[i, 1] + 1;
+                    }
+                    qp.Insert(insert, ib.StringValue + 'R');
+                    markVisited(ref gb, insert);
+                }
+                if (Shape.checkDownSide(ref gb, ib.ArrayValue))
+                {
+                    int[,] insert = new int[4, 2];
+                    for (int i = 0; i < 4; i++)
+                    {
+                        insert[i, 0] = ib.ArrayValue[i, 0] + 1;
+                        insert[i, 1] = ib.ArrayValue[i, 1];
+                    }
+                    qp.Insert(insert, ib.StringValue + 'D');
+                    markVisited(ref gb, insert);
+                }
+            }
+        }
+        static private void markVisited(ref GameBoard gb, int[,] visited)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                gb.Board[visited[i, 0], visited[i, 1]] = 'F';//tetris dFs, bFs
+            }
+        }
         static private void cleanBoard(ref GameBoard gb)
         {
             for (int i = 0; i < gb.Board.GetLength(0); i++)
@@ -51,53 +114,49 @@ namespace Tetris
         }
         static public string findBestPosition(ref GameBoard gb, Shape active, Shape next)
         {
-            Stack st = new Stack();
-            tetrisDFS(ref gb, active, st, "", 'N');//'N' z Nikama
+            Stack movesFirst = new Stack();
+            Stack movesSecond = new Stack();
+            int rotCount = active.NumOfRots();
+            tetrisBFS(ref gb, active, movesFirst, 0);
             cleanBoard(ref gb);
+            for (int i = 0; i < rotCount; i++)
+            {
+                active.RotRight(ref gb);
+                tetrisBFS(ref gb, active, movesFirst, i + 1);
+                cleanBoard(ref gb);
+            }
+            active.RotRight(ref gb);
+
             string bestPosition = "";
             int score = 5000;
 
-            int pocet = st.Count();
+            int pocet = movesFirst.Count();
             for (int i = 0; i < pocet; i++)
             {
-                InfoBlock tempDrop = st.Pop();
+                InfoBlock tempDrop = movesFirst.Pop();
 
-                //data for decision
-                int hardBlocked = checkBlockedHoles(ref gb, tempDrop.ArrayValue);
-                int softBlocked = HardDropAI.checkSoftBlockedHoles(ref gb, tempDrop.ArrayValue, hardBlocked);
-                int diff = HardDropAI.checkHeightDiff(ref gb, tempDrop.ArrayValue);
-                int numLines = HardDropAI.checkFullLines(ref gb, tempDrop.ArrayValue);
-                int hrbolatost = HardDropAI.deltaHrbolatosti(ref gb, tempDrop.ArrayValue);
-                //data
-
-                int tempScore = hardBlocked * 9 + softBlocked * 7 + diff * 5 - numLines * 3 + hrbolatost / 4;
-                if (numLines > 2)
-                {
-                    //test data
-                    Form1.test1 = hardBlocked;
-                    Form1.test2 = softBlocked;
-                    Form1.test3 = hrbolatost;
-                    Form1.test4 = diff;
-                    Form1.test5 = numLines;
-
-                    bestPosition = tempDrop.StringValue;
-                    break;
-                }
+                int tempScore = calculateScore(ref gb, tempDrop);
 
                 if (score > tempScore)
                 {
-                    //test data
-                    Form1.test1 = hardBlocked;
-                    Form1.test2 = softBlocked;
-                    Form1.test3 = hrbolatost;
-                    Form1.test4 = diff;
-                    Form1.test5 = numLines;
-
                     bestPosition = tempDrop.StringValue;
                     score = tempScore;
                 }
             }
             return bestPosition;
+        }
+        static private int calculateScore(ref GameBoard gb, InfoBlock tempDrop)
+        {
+            //data for decision
+            int hardBlocked = checkBlockedHoles(ref gb, tempDrop.ArrayValue);
+            int softBlocked = HardDropAI.checkSoftBlockedHoles(ref gb, tempDrop.ArrayValue, hardBlocked);
+            int diff = HardDropAI.checkHeightDiff(ref gb, tempDrop.ArrayValue);
+            int numLines = HardDropAI.checkFullLines(ref gb, tempDrop.ArrayValue);
+            int hrbolatost = HardDropAI.deltaHrbolatosti(ref gb, tempDrop.ArrayValue);
+            //data
+
+            int tempScore = hardBlocked * 9 + softBlocked * 7 + diff * 5 - numLines * 3 + hrbolatost / 4;
+            return tempScore;
         }
         static private int checkBlockedHoles(ref GameBoard gb, int[,] Pozice)
         {
@@ -200,7 +259,7 @@ namespace Tetris
 
                 tempHoles = 0;
                 q = new Queue();
-                if (Pozice[i, 1] < 10 && deska[Pozice[i, 0] + posunuti, Pozice[i, 1] + 1] == '\0')
+                if (Pozice[i, 1] < 9 && deska[Pozice[i, 0] + posunuti, Pozice[i, 1] + 1] == '\0')
                 {
                     deska[Pozice[i, 0] + posunuti, Pozice[i, 1] + 1] = 'C'; //oCCupied
                     q.Insert(new int[2] { Pozice[i, 0] + posunuti, Pozice[i, 1] + 1 });
@@ -229,6 +288,32 @@ namespace Tetris
                 }
             }
             return numOfHoles;
+        }
+        static public bool PlayNextMove(ref GameBoard gb, Shape shp, string navigation, int stepNum)
+        {
+            if (stepNum == navigation.Length)
+            {
+                return false;
+            }
+            else
+            {
+                switch (navigation[stepNum])
+                {
+                    case 'L':
+                        return shp.MoveLeft(ref gb);
+                    case 'R':
+                        return shp.MoveRight(ref gb);
+                    case 'D':
+                        return shp.MoveDown(ref gb);
+                    case 'G'://rotateriGht
+                        return shp.RotRight(ref gb);
+                    case 'E':
+                        shp.RotLeft(ref gb);
+                        return true;
+                    default:
+                        return false;
+                }
+            }
         }
     }
 }
