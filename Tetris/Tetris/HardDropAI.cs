@@ -482,26 +482,12 @@ namespace Tetris
                 int tempScore = hardBlocked * 9 + softBlocked * 7 + diff * 5 - numLines * 3 + hrbolatost / 4;
                 if (numLines>2)
                 {
-                    //test data
-                    Form1.test1 = hardBlocked;
-                    Form1.test2 = softBlocked;
-                    Form1.test3 = hrbolatost;
-                    Form1.test4 = diff;
-                    Form1.test5 = numLines;
-
                     bestDrop = tempDrop;
                     break;
                 }
 
                 if (score > tempScore)
                 {
-                    //test data
-                    Form1.test1 = hardBlocked;
-                    Form1.test2 = softBlocked;
-                    Form1.test3 = hrbolatost;
-                    Form1.test4 = diff;
-                    Form1.test5 = numLines;
-
                     score = tempScore;
                     bestDrop = tempDrop;
                 }

@@ -47,6 +47,13 @@ namespace Tetris
             {
                 start += 'G';
             }
+            for (int i = 0; i < 4; i++)
+            {
+                if (gb.Board[shp.Pozice[i,0],shp.Pozice[i,1]] != '\0')
+                {
+                    return;
+                }
+            }
             qp.Insert(shp.Pozice, start);
             markVisited(ref gb, shp.Pozice);
             while (qp.Count())
@@ -327,9 +334,6 @@ namespace Tetris
                         return shp.MoveDown(ref gb);
                     case 'G'://rotateriGht
                         return shp.RotRight(ref gb);
-                    case 'E':
-                        shp.RotLeft(ref gb);
-                        return true;
                     default:
                         return false;
                 }

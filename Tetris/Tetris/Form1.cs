@@ -34,20 +34,13 @@ namespace Tetris
         //HardDropAI
         int[,] placeToDropFrom;
 
-        //ImporvedAI
+        //ImprovedAI
         string nav;
         int stepNum;
 
-        //for testing purpose
-        static public int test1 = 0;
-        static public int test2 = 0;
-        static public int test3 = 0;
-        static public int test4 = 0;
-        static public int test5 = 0;
-
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            if (activePiece==null || timer2.Enabled)
+            if (activePiece==null || timer2.Enabled || timer3.Enabled)
             {
                 return base.ProcessCmdKey(ref msg, keyData);
             }
@@ -87,16 +80,8 @@ namespace Tetris
                     return base.ProcessCmdKey(ref msg, keyData);
             }
         }
-        private void updateInfo()//
+        private void updateInfo()
         {
-            //test
-            label7.Text = test1.ToString();
-            label8.Text = test2.ToString();
-            label9.Text = test3.ToString();
-            label10.Text = test4.ToString();
-            label11.Text = test5.ToString();
-            //
-
             label4.Text = gb.level.ToString();
             label5.Text = gb.score.ToString();
             label6.Text = gb.lines.ToString();          
