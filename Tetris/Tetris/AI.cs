@@ -116,34 +116,54 @@ namespace Tetris
         {
             Stack movesFirst = new Stack();
             Stack movesSecond = new Stack();
-            int rotCount = active.NumOfRots();
-            tetrisBFS(ref gb, active, movesFirst, 0);
-            cleanBoard(ref gb);
-            for (int i = 0; i < rotCount; i++)
-            {
-                active.RotRight(ref gb);
-                tetrisBFS(ref gb, active, movesFirst, i + 1);
-                cleanBoard(ref gb);
-            }
-            active.RotRight(ref gb);
+            findAllMoves(ref gb, active, movesFirst);
 
             string bestPosition = "";
             int score = 5000;
 
-            int pocet = movesFirst.Count();
-            for (int i = 0; i < pocet; i++)
+            int pocet1 = movesFirst.Count();
+            for (int i = 0; i < pocet1; i++)
             {
-                InfoBlock tempDrop = movesFirst.Pop();
+                InfoBlock tempDrop1 = movesFirst.Pop();
 
-                int tempScore = calculateScore(ref gb, tempDrop);
+                int tempScore = calculateScore(ref gb, tempDrop1);
 
-                if (score > tempScore)
+                GameBoard gbnew = gb.Copy();
+                for (int j = 0; j < 4; j++)
                 {
-                    bestPosition = tempDrop.StringValue;
-                    score = tempScore;
+                    gbnew.Board[tempDrop1.ArrayValue[j, 0], tempDrop1.ArrayValue[j, 1]] = 'T';//Test
+                }
+                int[] clearLines = gbnew.FindFullLines();
+                GameBoard.ClearLines(ref gbnew, clearLines);
+                GameBoard.MoveMap(ref gbnew.Board, clearLines);
+
+                findAllMoves(ref gbnew, next, movesSecond);
+                int pocet2 = movesSecond.Count();
+                for (int j = 0; j < pocet2; j++)
+                {
+                    InfoBlock tempDrop2 = movesSecond.Pop();
+                    int tempScore2 = calculateScore(ref gbnew, tempDrop2);
+                    if (score > tempScore + tempScore2)
+                    {
+                        score = tempScore + tempScore2;
+                        bestPosition = tempDrop1.StringValue;
+                    }
                 }
             }
             return bestPosition;
+        }
+        static private void findAllMoves(ref GameBoard gb, Shape shp, Stack stk)
+        {
+            int rotCount = shp.NumOfRots();
+            tetrisBFS(ref gb, shp, stk, 0);
+            cleanBoard(ref gb);
+            for (int i = 0; i < rotCount; i++)
+            {
+                shp.RotRight(ref gb);
+                tetrisBFS(ref gb, shp, stk, i + 1);
+                cleanBoard(ref gb);
+            }
+            shp.RotRight(ref gb);
         }
         static private int calculateScore(ref GameBoard gb, InfoBlock tempDrop)
         {

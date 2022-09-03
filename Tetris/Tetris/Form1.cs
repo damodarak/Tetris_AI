@@ -145,7 +145,7 @@ namespace Tetris
             {
                 if (gb.AddToBoard(activePiece))
                 {
-                    clearLines = gb.FindFullLines(activePiece);
+                    clearLines = gb.FindFullLines();
                     if (clearLines[4] != 0)
                     {
                         timer1.Enabled = false;
@@ -270,7 +270,7 @@ namespace Tetris
                     gameOver = true;
                     player.Stop();
                 }             
-                clearLines = gb.FindFullLines(activePiece);
+                clearLines = gb.FindFullLines();
                 GameBoard.ClearLines(ref gb, clearLines);
                 GameBoard.MoveMap(ref gb.Board, clearLines);
                 activePiece = nextPiece;
@@ -333,7 +333,7 @@ namespace Tetris
                     gameOver = true;
                     player.Stop();
                 }
-                clearLines = gb.FindFullLines(activePiece);
+                clearLines = gb.FindFullLines();
                 GameBoard.ClearLines(ref gb, clearLines);
                 GameBoard.MoveMap(ref gb.Board, clearLines);
                 activePiece = nextPiece;

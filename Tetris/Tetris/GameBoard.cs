@@ -109,22 +109,22 @@ namespace Tetris
                     return new Tyc();
             }
         }
-        public int[] FindFullLines(Shape shp)
+        public int[] FindFullLines()
         {
             int[] konec = new int[5];
             int j;
-            for (int i = 0; i < 4; i++)
+            for (int i = 2; i < 20; i++)
             {
                 for (j = 0; j < 10; j++)
                 {
-                    if (this.Board[shp.Pozice[i,0],j] == '\0')
+                    if (this.Board[i,j] == '\0')
                     {
                         break;
                     }
                 }
-                if (j==10 && !contains(konec,shp.Pozice[i,0]))
+                if (j==10)
                 {
-                    konec[konec[4]] = shp.Pozice[i, 0];
+                    konec[konec[4]] = i;
                     ++konec[4];                   
                 }
             }
