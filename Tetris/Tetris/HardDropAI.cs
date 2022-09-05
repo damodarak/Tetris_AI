@@ -8,11 +8,13 @@ namespace Tetris
 {
     static class HardDropAI
     {
+        //nalezeni vsech moznych pozic pro pouziti funkce HardDrop ve vsech rotaci
         static private int[,,] findAllHardDrops(ref GameBoard gb, Shape shp)
         {
             int[,,] konec;
             switch (shp.Color)
             {
+                //pocet moznych rotaci a HardDropu 
                 case 'O':
                     konec = new int[17, 4, 3];// konec[i,0,2] je pocet rotaci, zbytek nic neznamena
                     break;
@@ -38,15 +40,15 @@ namespace Tetris
                     konec = new int[1, 1, 1];
                     break;
             }
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 4; i++)//presuneme se na nejlevejsi stranu a budeme postupne 'HardDropovat' TetroBlock a nasledne rotovat
             {
                 shp.MoveLeft(ref gb);
             }
-            switch (konec.GetLength(0))
+            switch (konec.GetLength(0))//rozhodneme podle velikosti nulte dimenze, coz je pocet moznych dropu ve vsech rotacich
             {
                 case 9:
-                    leftToRightHardDrop(ref gb, shp, 0, 9, ref konec);
-                    for (int i = 0; i < 4; i++)
+                    leftToRightHardDrop(ref gb, shp, 0, 9, ref konec);//nalezeni vsech dropu
+                    for (int i = 0; i < 4; i++)//vraceni zpet na startovni pozici
                     {
                         shp.MoveRight(ref gb);
                     }
@@ -117,19 +119,20 @@ namespace Tetris
             }
             return konec;
         }
+        //pomoci funkce FakeHardDrop nalezneme vsechny mozne HardDropy v dane rotaci a zapiseme je do pole konec
         static private void leftToRightHardDrop(ref GameBoard gb, Shape shp, int od, int kam, ref int[,,] konec)
         {
             for (int i = od; i < kam; i++)
             {
                 int[,] hardDrop = shp.FakeHardDrop(ref gb);
-                for (int j = 0; j < 4; j++)
+                for (int j = 0; j < 4; j++)//prepsani hodnot do spravnych mist v poli konec, to zajistuji hodnoty 'int od' a 'int kam'
                 {
                     konec[i, j, 0] = hardDrop[j, 0];
                     konec[i, j, 1] = hardDrop[j, 1];
                 }
                 shp.MoveRight(ref gb);
             }
-            for (int i = od; i < kam; i++)
+            for (int i = od; i < kam; i++)//navraceni zpet na nejlevejsi kraj hraci desky
             {
                 shp.MoveLeft(ref gb);
             }
@@ -139,42 +142,21 @@ namespace Tetris
             Queue q;
             int numOfHoles = 0;//pocet zablokovanych der
             char[,] deska = (char[,])gb.Board.Clone();
-            for (int i = 0; i < 4; i++)//dosadime do hraci desky umistenou figurku
-            {
-                deska[Pozice[i, 0], Pozice[i, 1]] = 'P';//Pozice
-            }
 
-            int[] clearLines = new int[5];
-            for (int i = 0; i < 4; i++)
-            {
-                if (checkLineFull(deska, Pozice[i,0]))
-                {
-                    for (int j = 0; j < 10; j++)
-                    {
-                        deska[Pozice[i, 0], j] = '\0';
-                    }
-                    clearLines[clearLines[4]] = Pozice[i, 0];
-                    clearLines[4]++;               
-                }
-            }
+            GameBoard.markPozice(ref deska, Pozice);//dosadime do hraci desky umistenou figurku
+            int[] clearLines = GameBoard.FindFullLines(ref deska);
             GameBoard.MoveMap(ref deska, clearLines);//budeme kontrolovat blokovane diry po odstranenych radach
 
             for (int i = 0; i < 4; i++)
             {
-                if (GameBoard.contains(clearLines, Pozice[i,0]))
+                if (GameBoard.contains(clearLines, Pozice[i,0]))//pouze v pripade, ze dana pozice nezpusobi vymazani rady
                 {
                     continue;
                 }
                 q = new Queue();
                 int tempHoles = 0;
-                int posunuti = 0;
-                for (int j = 0; j < clearLines[4]; j++)
-                {
-                    if (clearLines[j] > Pozice[i,0])
-                    {
-                        posunuti++;
-                    }
-                }
+                int posunuti = countPosunuti(clearLines, Pozice[i,0]);
+
                 if (Pozice[i, 0] + posunuti < 19 && deska[Pozice[i, 0] + 1 + posunuti, Pozice[i, 1]] == '\0')
                 {
                     deska[Pozice[i, 0] + 1 + posunuti, Pozice[i, 1]] = 'C'; //oCCupied
@@ -207,11 +189,12 @@ namespace Tetris
         }
         static public void clearAfterBFS(char[,] deska, int[] coord)
         {
+            //vycistime desku stejnym prohledavanim BFS jako kdyz jsme prohledavali pocet blokovanych der akorat menime naopak chary
             Queue q = new Queue();
             deska[coord[0], coord[1]] = '\0';
             q.Insert(coord);
             int uselessNum = 0;
-            while(q.Count())
+            while(q.Count())//BFS - premenujeme 'C' char na '\0'
             {
                 int[] block = q.Pop();
                 BFS(q, deska, 'C', '\0', block, ref uselessNum);
@@ -219,6 +202,8 @@ namespace Tetris
         }
         static public void BFS(Queue q, char[,] deska, char searchChar, char changeChar, int[] souradnice, ref int holes)
         {
+            //jeden krok BFS - zkusime vsechny smery a pokud splnuje souradnice nase podminku (searchChar), tak to prepiseme na changeChar a
+            //pridame do fronty na pozdejsi prohledavani
             if (souradnice[0] - 1 >= 2 && deska[souradnice[0] - 1, souradnice[1]] == searchChar)
             {
                 ++holes;
@@ -246,50 +231,27 @@ namespace Tetris
         }
         static public int checkSoftBlockedHoles(ref GameBoard gb, int[,] Pozice, int hardBlocked)
         {
-            if (hardBlocked>0)
+            if (hardBlocked>0)//zajimame se o pripad kdy, nemame hardBlocked diry, protoze kazda hardBlocked je zaroven i softBlocked
             {
                 return 0;
             }
             int numOfSoftHoles = 0;
             char[,] deska = (char[,])gb.Board.Clone();
             int[,] clonePozice = (int[,])Pozice.Clone();
-            for (int i = 0; i < 4; i++)
-            {
-                deska[Pozice[i, 0], Pozice[i, 1]] = 'P';//Pozice
-            }
 
-            int[] clearLines = new int[5];
-            for (int i = 0; i < 4; i++)
-            {
-                if (checkLineFull(deska, Pozice[i, 0]))
-                {
-                    for (int j = 0; j < 10; j++)
-                    {
-                        deska[Pozice[i, 0], j] = '\0';
-                    }
-                    clearLines[clearLines[4]] = Pozice[i, 0];
-                    clearLines[4]++;
-                }
-            }
+            GameBoard.markPozice(ref deska, clonePozice);
+            int[] clearLines = GameBoard.FindFullLines(ref deska);
             GameBoard.MoveMap(ref deska, clearLines);//budeme kontrolovat blokovane diry po odstranenych radach
 
-
             for (int i = 0; i < 4; i++)
             {
-                if (GameBoard.contains(clearLines, Pozice[i, 0]))
+                if (GameBoard.contains(clearLines, Pozice[i, 0]))//pouze v pripade, ze dana pozice nezpusobi vymazani rady
                 {
                     continue;
                 }
+                int posunuti = countPosunuti(clearLines, clonePozice[i,0]);
 
-                int posunuti = 0;
-                for (int j = 0; j < clearLines[4]; j++)
-                {
-                    if (clearLines[j] > Pozice[i, 0])
-                    {
-                        posunuti++;
-                    }
-                }
-
+                //hledame softBlocked diry svisle dolu od souradnic bloku (i v pripade posunuti)
                 while (clonePozice[i, 0] + 1 + posunuti <= 19 && deska[clonePozice[i, 0] + 1 + posunuti, clonePozice[i, 1]] == '\0')
                 {
                     numOfSoftHoles++;
@@ -303,20 +265,8 @@ namespace Tetris
             int height = boardHeight(ref gb);
             int heighestBlock = 0;
             GameBoard gbnew = gb.Copy();
-            for (int i = 0; i < 4; i++)
-            {
-                gbnew.Board[Pozice[i, 0], Pozice[i, 1]] = 'C';//oCCupied
-            }
-
-            int[] clearLines = new int[5];
-            for (int i = 0; i < 4; i++)
-            {
-                if (checkLineFull(gbnew.Board, Pozice[i, 0]))
-                {
-                    clearLines[clearLines[4]] = Pozice[i, 0];//using last array member is an index for puting the line number
-                    clearLines[4]++;
-                }
-            }
+            GameBoard.markPozice(ref gbnew.Board, Pozice);
+            int[] clearLines = GameBoard.FindFullLines(ref gbnew.Board);
 
             for (int i = 0; i < 4; i++)
             {
@@ -325,14 +275,7 @@ namespace Tetris
                     continue;
                 }
 
-                int posunuti = 0;
-                for (int j = 0; j < clearLines[4]; j++)
-                {
-                    if (clearLines[j] > Pozice[i, 0])
-                    {
-                        posunuti++;
-                    }
-                }
+                int posunuti = countPosunuti(clearLines, Pozice[i,0]);
 
                 if ((20 - Pozice[i, 0] - posunuti) > heighestBlock)
                 {
@@ -345,11 +288,11 @@ namespace Tetris
         static private int boardHeight(ref GameBoard gb)
         {
             int lineNum = 2;
-            while (lineNum <= 19 && checkLineClear(ref gb, lineNum))
+            while (lineNum <= 19 && checkLineClear(ref gb, lineNum))//nalezeni prvniho radku, ktery neni prazdny (radek plny '\0')
             {
                 ++lineNum;
             }
-            int boardHeight = 20 - lineNum;
+            int boardHeight = 20 - lineNum;//hraci deska je reprezentovana opacne...nejvyssi pole maji nejnizsi indexy
             return boardHeight;
         }
         static private bool checkLineClear(ref GameBoard gb, int lineNum)
@@ -376,13 +319,11 @@ namespace Tetris
         }
         static public int checkFullLines(ref GameBoard gb, int[,] Pozice)
         {
+            //funkce vrati pocet plnych rad po zapsani int[] Pozice
             int fullLines = 0;
             int[] checkedLines = new int[4];
             char[,] deska = (char[,])gb.Board.Clone();
-            for (int i = 0; i < 4; i++)
-            {
-                deska[Pozice[i, 0], Pozice[i, 1]] = 'C';//oCCupied
-            }
+            GameBoard.markPozice(ref deska, Pozice);
             for (int i = 0; i < 4; i++)
             {
                 if (!GameBoard.contains(checkedLines, Pozice[i,0]))
@@ -401,7 +342,7 @@ namespace Tetris
             int[] vyskaSloupu = new int[10];
             for (int i = 0; i < 10; i++)
             {
-                for (int j = 2; j < 20; j++)
+                for (int j = 2; j < 20; j++)//vypocita vysku kazdeho sloupce v hracim poli
                 {
                     if (gb.Board[j, i] != '\0')
                     {
@@ -412,30 +353,16 @@ namespace Tetris
             }
 
             int hrbolatostPred = 0;
-            for (int i = 0; i < 9; i++)
+            for (int i = 0; i < 9; i++)//vypocet "hrbolatosti"
             {
                 hrbolatostPred += Math.Abs(vyskaSloupu[i] - vyskaSloupu[i + 1]);
             }
 
             char[,] deska = (char[,])gb.Board.Clone();
-            for (int i = 0; i < 4; i++)
-            {
-                deska[Pozice[i, 0], Pozice[i, 1]] = 'C';//oCCupied
-            }
+            GameBoard.markPozice(ref deska, Pozice);
 
             int[] clearLines = new int[5];
-            for (int i = 0; i < 4; i++)
-            {
-                if (checkLineFull(deska, Pozice[i, 0]))
-                {
-                    for (int j = 0; j < 10; j++)
-                    {
-                        deska[Pozice[i, 0], j] = '\0';
-                    }
-                    clearLines[clearLines[4]] = Pozice[i, 0];//using last array member is an index for puting the line number
-                    clearLines[4]++;
-                }
-            }
+            GameBoard.FindFullLines(ref deska);
             GameBoard.MoveMap(ref deska, clearLines);//budeme kontrolovat blokovane diry po odstranenych radach
 
             vyskaSloupu = new int[10];
@@ -505,22 +432,25 @@ namespace Tetris
         }
         static public bool PlayNextMove(ref GameBoard gb, Shape shp, int[,] finishPoz)
         {
+            //posunuti TetroBlocku, aby byl cely viditelny
             if (shp.Pozice[0,0] < 2 || shp.Pozice[1,0] < 2 || shp.Pozice[2,0] < 2 || shp.Pozice[3,0] < 2)
             {               
                 return shp.MoveDown(ref gb);
             }
+            //hodnota finishPoz[4,0] je pocetRotaci
             else if (finishPoz[4, 0] > 0 && finishPoz[4,0] <=3)
             {               
                 finishPoz[4, 0]--;
                 return shp.RotRight(ref gb);
             }
+            //zde jsme jiz ve spravne rotaci
             else if (finishPoz[4, 0] == 0)
             {
-                if (samePozice(shp.Pozice, finishPoz))
+                if (samePozice(shp.Pozice, finishPoz))//jsme ve spravne pozici a muzeme se zacit pohybovat dolu
                 {
-                    finishPoz[4, 0] = 200;
+                    finishPoz[4, 0] = 200;//200 znamnena pohyb dolu
                 }
-                else if (findDirect(shp.Pozice, finishPoz))
+                else if (findDirect(shp.Pozice, finishPoz))// true znamena doleva a false doprava
                 {
                     finishPoz[4, 0] = -100;//doleva
                 }
@@ -552,10 +482,12 @@ namespace Tetris
             {               
                 return shp.MoveRight(ref gb);
             }
-            return true;//just to calm down visual studio
+            return true;
         }
         static private bool samePozice(int[,] poz1, int[,] poz2)
         {
+            //kontrola zda 2 dvojice int[4,2] jsou totozne
+            //hledame bijektivni zobrazeni
             bool found;
             for (int i = 0; i < 4; i++)
             {
@@ -564,10 +496,10 @@ namespace Tetris
                 {
                     if (poz1[i,0] == poz2[j,0] && poz1[i,1] == poz2[j,1])
                     {
-                        found = true;
+                        found = true;//nalezeni prvku
                     }
                 }
-                if (!found)
+                if (!found)//nenasli jsme shodu
                 {
                     return false;
                 }
@@ -584,7 +516,7 @@ namespace Tetris
                     poz[i, 1] -= 1;
                 }
             }
-            if (samePozice(poz,finish))//pokud jsme vyleteli z hraci desky
+            if (samePozice(poz,finish))//dosli jsme maximalne doleva a pokud to stale neni totozna pozice, tak je spravny smer doprava
             {
                 return true;//doleva
             }
@@ -592,6 +524,18 @@ namespace Tetris
             {
                 return false;//doprava
             }
+        }
+        static public int countPosunuti(int[] clearLines, int line)
+        {
+            int posunuti = 0;
+            for (int j = 0; j < clearLines[4]; j++)
+            {
+                if (clearLines[j] > line)
+                {
+                    posunuti++;
+                }
+            }
+            return posunuti;
         }
     }
 }

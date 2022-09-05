@@ -33,11 +33,11 @@ namespace Tetris
             {
                 if (Board[shp.Pozice[i, 0], shp.Pozice[i, 1]] == '\0')
                 {
-                    Board[shp.Pozice[i, 0], shp.Pozice[i, 1]] = shp.Color;
+                    Board[shp.Pozice[i, 0], shp.Pozice[i, 1]] = shp.Color;//zapisujeme do hraci desky barvu TetroBlocku
                 }
                 else
                 {
-                    return false;
+                    return false;//na danem miste jiz neco je, tim padem nemuzeme vlozit figurku do hraci desky
                 }
             }
             return true;
@@ -131,6 +131,27 @@ namespace Tetris
             updateInfo(konec[4]);
             return konec;
         }
+        static public int[] FindFullLines(ref char[,] deska)
+        {
+            int[] konec = new int[5];
+            int j;
+            for (int i = 2; i < 20; i++)
+            {
+                for (j = 0; j < 10; j++)
+                {
+                    if (deska[i, j] == '\0')
+                    {
+                        break;
+                    }
+                }
+                if (j == 10)
+                {
+                    konec[konec[4]] = i;
+                    ++konec[4];
+                }
+            }
+            return konec;
+        }
         static public bool contains(int[] kde, int co)
         {
             for (int i = 0; i < 4; i++)
@@ -169,6 +190,13 @@ namespace Tetris
                 {
                     gb.Board[lines[i], j] = '\0';
                 }
+            }
+        }
+        static public void markPozice(ref char[,] deska, int[,] Pozice)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                deska[Pozice[i, 0], Pozice[i, 1]] = 'P';//Pozice
             }
         }
     }
