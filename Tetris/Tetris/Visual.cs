@@ -8,8 +8,11 @@ using System.Drawing;
 namespace Tetris
 {
     //proc nemuze byt tato classa static public???
+
+    //staticka trida pro zobrazeni a grafickou ilustraci prubehu hru
     static class Visual
     {
+        //nejzakladnejsi metoda, protoze se cela hra soustredi okolo ctvercu
         static public void DrawRect(Graphics grafika, Pen tuzka, char color, int height, int width)
         {
             Color colorBrush;
@@ -44,14 +47,17 @@ namespace Tetris
             }
             width *= 35;
             height *= 35;
-            grafika.DrawRectangle(tuzka, 1 + width, 1 + height, 35, 35);
+            grafika.DrawRectangle(tuzka, 1 + width, 1 + height, 35, 35);//ctverec
+
             SolidBrush sb = new SolidBrush(colorBrush);
-            grafika.FillRectangle(sb, 2+width, 2+height, 33, 33);
+            grafika.FillRectangle(sb, 2+width, 2+height, 33, 33);//vyvarveni ctverce
+
             colorBrush = Color.FromArgb(colorBrush.A, (int)(colorBrush.R * 0.8), 
                 (int)(colorBrush.G * 0.8), (int)(colorBrush.B * 0.8));
             sb.Color = colorBrush;
-            grafika.FillRectangle(sb, 11 + width, 11 + height, 15, 15);
+            grafika.FillRectangle(sb, 11 + width, 11 + height, 15, 15);// mensi ctverec pro hezci design
         }
+        //zobrazeni hraci figurky
         static public void DrawShape(Shape shp, Graphics grafika, Pen tuzka)
         {
             for (int i = 0; i < 4; i++)
@@ -59,6 +65,7 @@ namespace Tetris
                 DrawRect(grafika, tuzka, shp.Color, shp.Pozice[i, 0] - 2, shp.Pozice[i, 1]);
             }
         }
+        //zobrazeni hraciho pole bez figurky
         static public void DrawMap(ref GameBoard gb, Graphics grafika, Pen tuzka)
         {
             for (int i = 0; i < 20; i++)
@@ -79,6 +86,16 @@ namespace Tetris
             for (int i = 0; i < 4; i++)
             {
                 DrawRect(grafika, tuzka, shp.Color, shp.Pozice[i, 0] - 1, shp.Pozice[i, 1]-2);
+            }
+        }
+        //tato funkce se vola pri spusteni modu HardDropAI nebo ImpovedAI
+        static public void DrawGhost(ref GameBoard gb, int[,] ghost, Graphics grafika, Pen tuzka)
+        {
+            SolidBrush sb = new SolidBrush(Color.FromArgb(255, 240, 245));
+            for (int i = 0; i < 4; i++)
+            {
+                grafika.DrawRectangle(tuzka, (35 * ghost[i, 1]) + 1, (35 * (ghost[i, 0] - 2)) + 1, 35, 35);
+                grafika.FillRectangle(sb, (35 * ghost[i, 1]) + 2, (35 * (ghost[i, 0] - 2)) + 2, 33, 33);
             }
         }
     }

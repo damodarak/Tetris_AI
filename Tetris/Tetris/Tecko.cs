@@ -8,6 +8,7 @@ namespace Tetris
 {
     class Tecko : Shape
     {
+        //dana figurka je reprezentovana jako symbol plus '+' bez jednoho hrbolu, ktery se pohybuje pomoci poziceDiry pole a rotNum hodnoty
         private int[] stred;
         private int[,] poziceDiry;
         int rotNum;
@@ -21,6 +22,7 @@ namespace Tetris
         }
         private bool checkRot(ref GameBoard gb)
         {
+            //pri rotaci vzdy jen 'odstranime jeden roh a pridame ho na jinou pozici
             return (stred[1] != 0 && stred[1] != 9 && stred[0] != 19 &&
                 gb.Board[stred[0] + poziceDiry[rotNum, 0], stred[1] + poziceDiry[rotNum, 1]] == '\0');
         }
@@ -109,15 +111,6 @@ namespace Tetris
                     Pozice[i, 1] = stred[1] + poziceDiry[(rotNum + i) % 4, 1];
                 }
             }
-        }
-        public override int HardDrop(ref GameBoard gb)
-        {
-            int pocet = 0;
-            while (MoveDown(ref gb))
-            {
-                ++pocet;
-            }
-            return pocet;
         }
     }
 }

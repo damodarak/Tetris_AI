@@ -8,6 +8,7 @@ namespace Tetris
 {
     class Stack
     {
+        //puvodne pro DFS prohledavani pri hledani vsech tahu, ale nakonec nepouzita trida
         VagonPozic head;
         int count;
         public Stack()
@@ -32,6 +33,7 @@ namespace Tetris
             }
             ++this.count;
         }
+        //pretizeni funkce Insert pro moznost vlozit pomoci objektu InfoBlock
         public void Insert(InfoBlock ib)
         {
             if (this.head == null)

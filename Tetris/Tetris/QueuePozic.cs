@@ -8,6 +8,8 @@ namespace Tetris
 {
     class QueuePozic
     {
+        //standardni fronta s pretizenou funkci Insert() a funkce Pop() navraci objekt InfoBlock
+        //fronta pouzita pri prohledavani vsech moznych dosazitelnych pozic
         VagonPozic head;
         VagonPozic tail;
         int count;
@@ -27,6 +29,10 @@ namespace Tetris
             {
                 return false;
             }
+        }
+        public int NumCount()
+        {
+            return this.count;
         }
         public void Insert(int[,] val, string navigace)
         {

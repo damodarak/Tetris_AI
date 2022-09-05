@@ -8,6 +8,7 @@ namespace Tetris
 {
     class InfoBlock
     {
+        //objekt, ktery uchovava cestu k pozici od startu a pozici samotnou v poli ArrayValue
         public string StringValue;
         public int[,] ArrayValue;
         public InfoBlock(string val1, int[,] val2)

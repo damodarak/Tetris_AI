@@ -8,6 +8,7 @@ namespace Tetris
 {
     class Vagon
     {
+        //Vagon pro DS Queue
         public int[] coordinates;
         public Vagon next;
         public Vagon(int[] coordinates, Vagon next)

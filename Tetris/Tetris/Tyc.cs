@@ -8,6 +8,8 @@ namespace Tetris
 {
     class Tyc : Shape
     {
+        //u dane figurky otestujeme pri rotaci vsechny pozice, kam se chceme premistit
+        //rotaceR i rotaceL vykona stejnou funkci
         private int rotNum;
         public Tyc()
         {
@@ -118,15 +120,6 @@ namespace Tetris
         public override void RotLeft(ref GameBoard gb)
         {
             RotRight(ref gb);
-        }
-        public override int HardDrop(ref GameBoard gb)
-        {
-            int pocet = 0;
-            while (MoveDown(ref gb))
-            {
-                ++pocet;
-            }
-            return pocet;
         }
     }
 }

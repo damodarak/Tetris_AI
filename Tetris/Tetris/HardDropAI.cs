@@ -492,6 +492,8 @@ namespace Tetris
                     bestDrop = tempDrop;
                 }
             }
+
+            Form1.Ghost = (int[,])bestDrop.Clone();
             while (bestDrop[0,0] != 2 && bestDrop[1,0] != 2 && bestDrop[2,0] != 2 && bestDrop[3,0] != 2)
             {
                 for (int i = 0; i < 4; i++)

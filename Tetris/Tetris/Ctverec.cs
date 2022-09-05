@@ -8,6 +8,7 @@ namespace Tetris
 {
     class Ctverec : Shape
     {
+        //nejjednodussi tvar bez rotace
         public Ctverec()
         {
             Pozice = new int[4, 2] { { 2, 4, }, { 2, 5 }, { 3, 4 }, { 3, 5 } };
@@ -72,15 +73,6 @@ namespace Tetris
         public override void RotLeft(ref GameBoard gb)
         {
             return;
-        }
-        public override int HardDrop(ref GameBoard gb)
-        {
-            int pocet = 0;
-            while (MoveDown(ref gb))
-            {
-                ++pocet;
-            }
-            return pocet;
         }
     }
 }

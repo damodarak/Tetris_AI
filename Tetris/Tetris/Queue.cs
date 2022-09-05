@@ -8,6 +8,7 @@ namespace Tetris
 {
     class Queue
     {
+        //standardni trida, ktera je pouzita pri pocitani zablokovanych mist v hraci desce
         Vagon head;
         Vagon tail;
         int count;

@@ -8,6 +8,7 @@ namespace Tetris
 {
     class Elko : Shape
     {
+        //stejna logika jako v Jecko tride
         private int[,] rotationHack;
         private int[] stred;
         private int rotNum;
@@ -120,15 +121,6 @@ namespace Tetris
                 Pozice[3, 1] -= rotationHack[rotHackNum, 1];
                 rotNum *= -1;
             }
-        }
-        public override int HardDrop(ref GameBoard gb)
-        {
-            int pocet = 0;
-            while (MoveDown(ref gb))
-            {
-                ++pocet;
-            }
-            return pocet;
         }
     }
 }

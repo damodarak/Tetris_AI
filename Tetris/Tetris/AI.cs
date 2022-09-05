@@ -39,7 +39,7 @@ namespace Tetris
                 }               
             }
         }
-        static private void tetrisBFS(ref GameBoard gb, Shape shp, Stack positions, int numRots)
+        static private void tetrisBFS(ref GameBoard gb, Shape shp, QueuePozic positions, int numRots)
         {
             QueuePozic qp = new QueuePozic();
             string start = "";
@@ -121,14 +121,14 @@ namespace Tetris
         }
         static public string findBestPosition(ref GameBoard gb, Shape active, Shape next)
         {
-            Stack movesFirst = new Stack();
-            Stack movesSecond = new Stack();
+            QueuePozic movesFirst = new QueuePozic();
+            QueuePozic movesSecond = new QueuePozic();
             findAllMoves(ref gb, active, movesFirst);
 
             string bestPosition = "";
             int score = 5000;
 
-            int pocet1 = movesFirst.Count();
+            int pocet1 = movesFirst.NumCount();
             for (int i = 0; i < pocet1; i++)
             {
                 InfoBlock tempDrop1 = movesFirst.Pop();
@@ -145,7 +145,7 @@ namespace Tetris
                 GameBoard.MoveMap(ref gbnew.Board, clearLines);
 
                 findAllMoves(ref gbnew, next, movesSecond);
-                int pocet2 = movesSecond.Count();
+                int pocet2 = movesSecond.NumCount();
                 for (int j = 0; j < pocet2; j++)
                 {
                     InfoBlock tempDrop2 = movesSecond.Pop();
@@ -154,20 +154,21 @@ namespace Tetris
                     {
                         score = tempScore + tempScore2;
                         bestPosition = tempDrop1.StringValue;
+                        Form1.Ghost = (int[,])tempDrop1.ArrayValue.Clone();
                     }
                 }
             }
             return bestPosition;
         }
-        static private void findAllMoves(ref GameBoard gb, Shape shp, Stack stk)
+        static private void findAllMoves(ref GameBoard gb, Shape shp, QueuePozic qp)
         {
             int rotCount = shp.NumOfRots();
-            tetrisBFS(ref gb, shp, stk, 0);
+            tetrisBFS(ref gb, shp, qp, 0);
             cleanBoard(ref gb);
             for (int i = 0; i < rotCount; i++)
             {
                 shp.RotRight(ref gb);
-                tetrisBFS(ref gb, shp, stk, i + 1);
+                tetrisBFS(ref gb, shp, qp, i + 1);
                 cleanBoard(ref gb);
             }
             shp.RotRight(ref gb);

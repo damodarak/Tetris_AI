@@ -8,6 +8,7 @@ namespace Tetris
 {
     class Esko : Shape
     {
+        //stejna logika jako u Zetko tridy
         int rotNum;
         public Esko()
         {
@@ -103,15 +104,6 @@ namespace Tetris
         public override void RotLeft(ref GameBoard gb)
         {
             RotRight(ref gb);
-        }
-        public override int HardDrop(ref GameBoard gb)
-        {
-            int pocet = 0;
-            while (MoveDown(ref gb))
-            {
-                ++pocet;
-            }
-            return pocet;
         }
     }
 }

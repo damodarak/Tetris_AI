@@ -8,6 +8,7 @@ namespace Tetris
 {
     class Zetko : Shape
     {
+        //pri rotace dany tvar presunuje jenom 2 pozice a zbyle 2 zustavaji na stejnem miste, takze musime jen overit 2 pozice, zda-li je mozna rotace
         int rotNum;
         public Zetko()
         {
@@ -104,15 +105,6 @@ namespace Tetris
         public override void RotLeft(ref GameBoard gb)
         {
             RotRight(ref gb);
-        }
-        public override int HardDrop(ref GameBoard gb)
-        {
-            int pocet = 0;
-            while (MoveDown(ref gb))
-            {
-                ++pocet;
-            }
-            return pocet;
         }
     }
 }

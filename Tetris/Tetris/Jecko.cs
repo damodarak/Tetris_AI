@@ -8,14 +8,15 @@ namespace Tetris
 {
     class Jecko : Shape
     {
+        //dana figurka je reprezentovana svym stredem a 'hackem', ktery se pohybuje podle hodnoty rotNum
         private int[,] rotationHack;
         private int[] stred;
         private int rotNum;
         private int rotHackNum;
         public Jecko()
         {
-            Pozice = new int[4, 2] { { 2, 3 }, { 2, 4 }, { 2, 5 }, { 3, 5 } };
-            rotationHack = new int[4, 2] { { 0, -2 }, { -2, 0 }, { 0, 2 }, { 2, 0 } };
+            Pozice = new int[4, 2] { { 2, 3 }, { 2, 4 }, { 2, 5 }, { 3, 5 } };//rovna primka a na konci hacek
+            rotationHack = new int[4, 2] { { 0, -2 }, { -2, 0 }, { 0, 2 }, { 2, 0 } };//pohyb hracku pri rotaci
             stred = new int[2] { 2, 4 };
             rotNum = 1;
             rotHackNum = 0;
@@ -95,6 +96,7 @@ namespace Tetris
         {
             if (checkRotRight(ref gb))
             {
+                //pokud to bude mozne, tak primku otocime o 90° a hacek posuneme podle posunu a hodnoty rotHackNum
                 Pozice[0, 0] += rotNum * -1;
                 Pozice[0, 1] += rotNum * 1;
                 Pozice[2, 0] -= rotNum * -1;
@@ -109,6 +111,7 @@ namespace Tetris
         }
         public override void RotLeft(ref GameBoard gb)
         {
+            //stejna logika jako v predchozi funkci
             if (checkRotLeft(ref gb))
             {
                 Pozice[0, 0] += rotNum * -1;
@@ -120,15 +123,6 @@ namespace Tetris
                 Pozice[3, 1] -= rotationHack[rotHackNum, 1];
                 rotNum *= -1;
             }
-        }
-        public override int HardDrop(ref GameBoard gb)
-        {
-            int pocet = 0;
-            while (MoveDown(ref gb))
-            {
-                ++pocet;
-            }
-            return pocet;
         }
     }
 }

@@ -12,9 +12,6 @@ namespace Tetris
 {
     public partial class Form1 : Form
     {
-        System.Media.SoundPlayer player;
-        bool playing;
-
         public Form1()
         {
             InitializeComponent();
@@ -23,6 +20,12 @@ namespace Tetris
             player = new System.Media.SoundPlayer(Properties.Resources.tetris_music);
             playing = false;
         }
+
+        //hudba
+        System.Media.SoundPlayer player;
+        bool playing;
+
+        //zakladni promenne pro chod hry ve vsech rezimech
         Pen tuzka;
         Shape activePiece;
         Shape nextPiece;
@@ -35,8 +38,11 @@ namespace Tetris
         int[,] placeToDropFrom;
 
         //ImprovedAI
-        string nav;
-        int stepNum;
+        string nav;//navigace od startu do chtene pozice
+        int stepNum;//kolikaty krok se chystame udelat
+
+        //ghost for AI
+        static public int[,] Ghost;//pole, ktere je vykresleno a kam miri TetroBlock pomoc AI
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
@@ -51,9 +57,11 @@ namespace Tetris
                     activePiece.MoveUp();
                     return true;
                 case Keys.Space:
+                    timer1.Enabled = false;
                     pictureBox1.Invalidate();
                     gb.score += activePiece.HardDrop(ref gb);
                     move(ref gb);
+                    timer1.Enabled = true;
                     return true;
                 case Keys.Left:
                     pictureBox1.Invalidate();
@@ -146,6 +154,8 @@ namespace Tetris
                 {
                     timer1.Enabled = false;
                     gameOver = true;
+                    player.Stop();
+                    playing = false;
                 }
             }
         }
@@ -162,7 +172,11 @@ namespace Tetris
             }
             else
             {
-                Visual.DrawGame(ref gb, activePiece, e.Graphics, tuzka);
+                if ((timer2.Enabled || timer3.Enabled) && Ghost != null)
+                {
+                    Visual.DrawGhost(ref gb, Ghost, e.Graphics, tuzka);
+                }
+                Visual.DrawGame(ref gb, activePiece, e.Graphics, tuzka);                              
             }
         }
 
