@@ -43,23 +43,23 @@ namespace Tetris
 
         //ghost for AI
         static public int[,] Ghost;//pole, ktere je vykresleno a kam miri TetroBlock pomoc AI
-
+        //prepsani virtualni funkce ProcessCmdKey, protoze KeyDown Event naprosto a nijak nefunguje
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             if (activePiece==null || timer2.Enabled || timer3.Enabled)
             {
-                return base.ProcessCmdKey(ref msg, keyData);
+                return base.ProcessCmdKey(ref msg, keyData);//nezapli jsme jeste hru, nebo bezi AI rezim
             }
             switch (keyData)
             {
-                case Keys.W:
+                case Keys.Q://skryta funkce
                     pictureBox1.Invalidate();
                     activePiece.MoveUp();
                     return true;
                 case Keys.Space:
                     timer1.Enabled = false;
                     pictureBox1.Invalidate();
-                    gb.score += activePiece.HardDrop(ref gb);
+                    gb.score += activePiece.HardDrop(ref gb);//pripsani bodu a zaroven zhozeni figurky na same dno
                     move(ref gb);
                     timer1.Enabled = true;
                     return true;
@@ -90,10 +90,11 @@ namespace Tetris
         }
         private void updateInfo()
         {
+            //aktualize dat
             label4.Text = gb.level.ToString();
             label5.Text = gb.score.ToString();
             label6.Text = gb.lines.ToString();          
-            if (timer2.Enabled == false && gb.level <= 10 && timer1.Interval != 201)
+            if (!timer2.Enabled && !timer3.Enabled && gb.level <= 10 && timer1.Interval != 201)//pri zvysovani levelu se snizuje rychlost hry
             {
                 moveSpeed = 500 - (gb.level - 1) * 40;
                 timer1.Interval = moveSpeed;
@@ -130,6 +131,7 @@ namespace Tetris
             }
             move(ref gb);
         }
+        //metoda pro pohyb pri uzivatelskem rezimu
         private void move(ref GameBoard gb)
         {
             pictureBox1.Invalidate();
@@ -159,6 +161,7 @@ namespace Tetris
                 }
             }
         }
+        //main gameboard picturebox
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
             if (activePiece==null)
@@ -179,13 +182,13 @@ namespace Tetris
                 Visual.DrawGame(ref gb, activePiece, e.Graphics, tuzka);                              
             }
         }
-
+        //tetris picture picturebox
         private void pictureBox2_Paint(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
             g.DrawImage(Properties.Resources.tetris, 0, 0, 260, 90);
         }
-
+        //nextPiece picturebox
         private void pictureBox3_Paint(object sender, PaintEventArgs e)
         {
             if (nextPiece==null)
@@ -218,7 +221,7 @@ namespace Tetris
             timer1.Enabled = true;
             gameOver = false;
         }
-
+        //harddrop AI button
         private void button3_Click(object sender, EventArgs e)
         {         
             if (checkBox1.Checked)
@@ -242,24 +245,13 @@ namespace Tetris
             gameOver = false;
             timer2.Enabled = true;
         }
-
+        //harddrop AI tick
         private void timer2_Tick(object sender, EventArgs e)
         {
             pictureBox1.Invalidate();
             pictureBox3.Invalidate();
 
-            if (checkBox1.Checked != playing)
-            {
-                playing = checkBox1.Checked;
-                if (playing)
-                {
-                    player.PlayLooping();
-                }
-                else
-                {
-                    player.Stop();
-                }
-            }
+            checkMusicPlayer();
 
             if (!HardDropAI.PlayNextMove(ref gb, activePiece, placeToDropFrom))
             {
@@ -268,17 +260,20 @@ namespace Tetris
                     timer2.Enabled = false;
                     gameOver = true;
                     player.Stop();
+                }
+                else
+                {
+                    clearLines = gb.FindFullLines();
+                    GameBoard.ClearLines(ref gb, clearLines);
+                    GameBoard.MoveMap(ref gb.Board, clearLines);
+                    activePiece = nextPiece;
+                    nextPiece = GameBoard.GeneratePiece();
+                    placeToDropFrom = HardDropAI.FindBestPlaceForDrop(ref gb, activePiece);
+                    updateInfo();
                 }             
-                clearLines = gb.FindFullLines();
-                GameBoard.ClearLines(ref gb, clearLines);
-                GameBoard.MoveMap(ref gb.Board, clearLines);
-                activePiece = nextPiece;
-                nextPiece = GameBoard.GeneratePiece();
-                placeToDropFrom = HardDropAI.FindBestPlaceForDrop(ref gb, activePiece);
-                updateInfo();
             }         
         }
-
+        //improved AI button
         private void button4_Click(object sender, EventArgs e)
         {
             if (checkBox1.Checked)
@@ -300,17 +295,45 @@ namespace Tetris
             nav = AI.findBestPosition(ref gb, activePiece, nextPiece);
             stepNum = 0;
 
-
             updateInfo();
             gameOver = false;
             timer3.Enabled = true;
         }
-
+        //improved AI tick
         private void timer3_Tick(object sender, EventArgs e)
         {
             pictureBox1.Invalidate();
             pictureBox3.Invalidate();
 
+            checkMusicPlayer();
+
+            if (!AI.PlayNextMove(ref gb, activePiece, nav, stepNum))//neni mozny pohyb dolu
+            {
+                if (!gb.AddToBoard(activePiece))//na miste figurky v desce uz neco je ulozeno --> konec hry
+                {
+                    timer3.Enabled = false;
+                    gameOver = true;
+                    player.Stop();
+                }
+                else
+                {
+                    clearLines = gb.FindFullLines();
+                    GameBoard.ClearLines(ref gb, clearLines);
+                    GameBoard.MoveMap(ref gb.Board, clearLines);
+                    activePiece = nextPiece;
+                    nextPiece = GameBoard.GeneratePiece();
+                    nav = AI.findBestPosition(ref gb, activePiece, nextPiece);
+                    stepNum = 0;
+                    updateInfo();
+                }                
+            }
+            else
+            {
+                ++stepNum;
+            }
+        }
+        private void checkMusicPlayer()
+        {
             if (checkBox1.Checked != playing)
             {
                 playing = checkBox1.Checked;
@@ -322,28 +345,6 @@ namespace Tetris
                 {
                     player.Stop();
                 }
-            }
-
-            if (!AI.PlayNextMove(ref gb, activePiece, nav, stepNum))
-            {
-                if (!gb.AddToBoard(activePiece))
-                {
-                    timer3.Enabled = false;
-                    gameOver = true;
-                    player.Stop();
-                }
-                clearLines = gb.FindFullLines();
-                GameBoard.ClearLines(ref gb, clearLines);
-                GameBoard.MoveMap(ref gb.Board, clearLines);
-                activePiece = nextPiece;
-                nextPiece = GameBoard.GeneratePiece();
-                nav = AI.findBestPosition(ref gb, activePiece, nextPiece);
-                stepNum = 0;
-                updateInfo();
-            }
-            else
-            {
-                ++stepNum;
             }
         }
     }

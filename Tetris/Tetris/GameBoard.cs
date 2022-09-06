@@ -10,7 +10,7 @@ namespace Tetris
     {
         //colors - Orange, Red, Violet, Yellow, Green, Darkblue, Lightblue
         static int numOfPieces = 0;
-        static bool[] piecesDistribution = new bool[7];
+        static bool[] piecesDistribution = new bool[7];//informace o tom, ktere TetroBlocky jsme uz v danem cyklu pouzili
         static Random r = new Random(Environment.TickCount);
 
         public char[,] Board;
@@ -56,7 +56,7 @@ namespace Tetris
             ++numOfPieces;
             int cis;
 
-            if (numOfPieces == 8)
+            if (numOfPieces == 8)//ukonceny cyklus, zacatek noveho
             {
                 piecesDistribution = new bool[7];
                 numOfPieces = 1;
@@ -76,7 +76,7 @@ namespace Tetris
             }
 
 
-            while (piecesDistribution[cis])
+            while (piecesDistribution[cis])//dokud nenajdeme jeste nepouzity tvar v tomto cyklu
             {
                 cis = r.Next(0, 7);
             }
@@ -117,15 +117,15 @@ namespace Tetris
             {
                 for (j = 0; j < 10; j++)
                 {
-                    if (this.Board[i,j] == '\0')
+                    if (this.Board[i,j] == '\0')//rada neni naplnena bloky
                     {
                         break;
                     }
                 }
-                if (j==10)
+                if (j==10)//je naplnena bloky a cislo rady ulozime do pole konec
                 {
                     konec[konec[4]] = i;
-                    ++konec[4];                   
+                    ++konec[4];//pocet nalezenych rad        
                 }
             }
             updateInfo(konec[4]);
@@ -133,6 +133,7 @@ namespace Tetris
         }
         static public int[] FindFullLines(ref char[,] deska)
         {
+            //stejna logika jako v metode FindFullLines()
             int[] konec = new int[5];
             int j;
             for (int i = 2; i < 20; i++)
@@ -154,6 +155,7 @@ namespace Tetris
         }
         static public bool contains(int[] kde, int co)
         {
+            //zjistime, zda prvek co se nachazi v poli kde
             for (int i = 0; i < 4; i++)
             {
                 if (kde[i] == co)
@@ -165,7 +167,7 @@ namespace Tetris
         }
         private void updateInfo(int numLines)
         {
-            score += points[numLines] * level;
+            score += points[numLines] * level;//system score
             lines += numLines;
             level = (lines / 10) + 1;           
         }
@@ -173,9 +175,9 @@ namespace Tetris
         {
             for (int i = 0; i < lines[4]; i++)//lines[4] je pocet rad, ktere byly vymazany
             {
-                for (int j = lines[i]; j > 0; j--)//posuneme vsechno dolu i rady ktere nahore nevidime
+                for (int j = lines[i]; j > 0; j--)//posuneme vsechno dolu i rady ktere nahore nevidime, a tim se uvolni misto
                 {
-                    for (int k = 0; k < 10; k++)//vsechny sloupce
+                    for (int k = 0; k < 10; k++)//vsechny sloupce v jednom radku
                     {
                         deska[j, k] = deska[j - 1, k];//ctverec o jedna vys jde niz
                     }
@@ -194,6 +196,7 @@ namespace Tetris
         }
         static public void markPozice(ref char[,] deska, int[,] Pozice)
         {
+            //oznackovani pozice
             for (int i = 0; i < 4; i++)
             {
                 deska[Pozice[i, 0], Pozice[i, 1]] = 'P';//Pozice
