@@ -19,6 +19,7 @@ namespace Tetris
             clearLines = new int[5];
             player = new System.Media.SoundPlayer(Properties.Resources.tetris_music);
             playing = false;
+            wb = false;
         }
 
         //hudba
@@ -43,10 +44,36 @@ namespace Tetris
 
         //ghost for AI
         static public int[,] Ghost;//pole, ktere je vykresleno a kam miri TetroBlock pomoc AI
+
+        //WallBreaker
+        bool wb;
+        WallBreaker wbgame;
+
         //prepsani virtualni funkce ProcessCmdKey, protoze KeyDown Event naprosto a nijak nefunguje
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            if (activePiece==null || timer2.Enabled || timer3.Enabled)
+            if (wb && !wbgame.gameover)
+            {
+                switch (keyData)
+                {
+                    case Keys.Left:
+                        pictureBox1.Invalidate();
+                        wbgame.MoveLeft();
+                        return true;
+                    case Keys.Right:
+                        pictureBox1.Invalidate();
+                        wbgame.MoveRight();
+                        return true;
+                    case Keys.Space:
+                        pictureBox1.Invalidate();
+                        wbgame.Shoot();
+                        timer5.Enabled = true;
+                        return true;
+                    default:
+                        return base.ProcessCmdKey(ref msg, keyData);
+                }
+            }
+            else if (activePiece==null || timer2.Enabled || timer3.Enabled)
             {
                 return base.ProcessCmdKey(ref msg, keyData);//nezapli jsme jeste hru, nebo bezi AI rezim
             }
@@ -104,21 +131,10 @@ namespace Tetris
         {
             Application.Exit();
         }
-
+        //user tetris game tick
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (checkBox1.Checked != playing)
-            {
-                playing = checkBox1.Checked;
-                if (playing)
-                {
-                    player.PlayLooping();
-                }
-                else
-                {
-                    player.Stop();
-                }
-            }
+            checkMusicPlayer();
 
             if (timer1.Interval == 201)
             {
@@ -164,9 +180,17 @@ namespace Tetris
         //main gameboard picturebox
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
-            if (activePiece==null)
+            if (activePiece==null && !wb)
             {
                 return;
+            }
+            else if (wb)
+            {
+                Visual.DrawWB(ref wbgame, e.Graphics, tuzka);
+                if (wbgame.gameover)
+                {
+                    e.Graphics.DrawImage(Properties.Resources.gover, 0, 150, 352, 200);
+                }
             }
             else if (gameOver)
             {
@@ -202,6 +226,9 @@ namespace Tetris
         }
         private void button1_Click_1(object sender, EventArgs e)
         {
+            wb = false;
+            timer4.Enabled = timer5.Enabled = false;
+
             if (checkBox1.Checked)
             {
                 playing = true;
@@ -223,7 +250,10 @@ namespace Tetris
         }
         //harddrop AI button
         private void button3_Click(object sender, EventArgs e)
-        {         
+        {
+            wb = false;
+            timer4.Enabled = timer5.Enabled = false;
+
             if (checkBox1.Checked)
             {
                 playing = true;
@@ -276,6 +306,9 @@ namespace Tetris
         //improved AI button
         private void button4_Click(object sender, EventArgs e)
         {
+            wb = false;
+            timer4.Enabled = timer5.Enabled = false;
+
             if (checkBox1.Checked)
             {
                 playing = true;
@@ -346,6 +379,69 @@ namespace Tetris
                     player.Stop();
                 }
             }
+        }
+        //wall breaker play button
+        private void button5_Click(object sender, EventArgs e)
+        {
+            timer1.Enabled = timer2.Enabled = timer3.Enabled = false;
+            nextPiece = null;
+            activePiece = null;
+
+            pictureBox1.Invalidate();
+            pictureBox3.Invalidate();
+
+            playing = false;
+            player.Stop();
+            wb = true;
+            wbgame = new WallBreaker();
+            label6.Text = "NA";
+            updateWBScore();
+            timer4.Enabled = true;
+        }
+        private void updateWBScore()
+        {
+            label4.Text = wbgame.level.ToString();
+            label5.Text = wbgame.score.ToString();
+            timer4.Interval = wbgame.GameSpeed();
+        }
+        //wall breaker tick
+        private void timer4_Tick(object sender, EventArgs e)
+        {
+            pictureBox1.Invalidate();
+
+            if (wbgame.Hit())
+            {
+                wbgame.DelHitBlock();
+            }
+            else if(!wbgame.MoveMap())
+            {
+                timer4.Enabled = false;
+                wbgame.gameover = true;
+            }
+
+            updateWBScore();
+        }
+        //wall breaker shooting tick
+        private void timer5_Tick(object sender, EventArgs e)
+        {
+            pictureBox1.Invalidate();
+
+            if (!wbgame.reload)
+            {
+                timer5.Enabled = false;
+            }
+            else if (wbgame.Hit())
+            {
+                wbgame.DelHitBlock();
+                timer5.Enabled = false;
+                wbgame.reload = false;
+            }
+            else
+            {
+                wbgame.ProceedShot();
+            }
+
+            updateWBScore();
         }
     }
 }

@@ -98,5 +98,20 @@ namespace Tetris
                 grafika.FillRectangle(sb, (35 * ghost[i, 1]) + 2, (35 * (ghost[i, 0] - 2)) + 2, 33, 33);
             }
         }
+        static public void DrawWB(ref WallBreaker wbgame, Graphics grafika, Pen tuzka)
+        {
+            for (int i = 0; i < 18; i++)
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    DrawRect(grafika, tuzka, wbgame.Board[i,j], i, j);
+                }
+            }
+            DrawRect(grafika, tuzka, 'B', 17, wbgame.Hrac);//B - black
+            if (wbgame.Strela[0] != -1)
+            {
+                DrawRect(grafika, tuzka, 'B', wbgame.Strela[0], wbgame.Strela[1]);
+            }
+        }
     }
 }

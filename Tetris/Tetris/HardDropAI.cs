@@ -291,18 +291,18 @@ namespace Tetris
         static private int boardHeight(ref GameBoard gb)
         {
             int lineNum = 2;
-            while (lineNum <= 19 && checkLineClear(ref gb, lineNum))//nalezeni prvniho radku, ktery neni prazdny (radek plny '\0')
+            while (lineNum <= 19 && checkLineClear(ref gb.Board, lineNum))//nalezeni prvniho radku, ktery neni prazdny (radek plny '\0')
             {
                 ++lineNum;
             }
             int boardHeight = 20 - lineNum;//hraci deska je reprezentovana opacne...nejvyssi pole maji nejnizsi indexy
             return boardHeight;
         }
-        static private bool checkLineClear(ref GameBoard gb, int lineNum)
+        static public bool checkLineClear(ref char[,] deska, int lineNum)
         {
             for (int i = 0; i < 10; i++)
             {
-                if (gb.Board[lineNum, i] != '\0')
+                if (deska[lineNum, i] != '\0')
                 {
                     return false;
                 }

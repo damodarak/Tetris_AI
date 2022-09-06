@@ -47,6 +47,9 @@ namespace Tetris
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.button4 = new System.Windows.Forms.Button();
             this.timer3 = new System.Windows.Forms.Timer(this.components);
+            this.button5 = new System.Windows.Forms.Button();
+            this.timer4 = new System.Windows.Forms.Timer(this.components);
+            this.timer5 = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -70,7 +73,7 @@ namespace Tetris
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(102, 63);
             this.button1.TabIndex = 1;
-            this.button1.Text = "Start";
+            this.button1.Text = "Tetris";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
@@ -207,11 +210,32 @@ namespace Tetris
             this.timer3.Interval = 20;
             this.timer3.Tick += new System.EventHandler(this.timer3_Tick);
             // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(513, 37);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(102, 63);
+            this.button5.TabIndex = 24;
+            this.button5.Text = "Wall Breaker";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
+            // 
+            // timer4
+            // 
+            this.timer4.Interval = 1000;
+            this.timer4.Tick += new System.EventHandler(this.timer4_Tick);
+            // 
+            // timer5
+            // 
+            this.timer5.Interval = 5;
+            this.timer5.Tick += new System.EventHandler(this.timer5_Tick);
+            // 
             // Form1
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
             this.ClientSize = new System.Drawing.Size(894, 707);
+            this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.button3);
@@ -259,6 +283,9 @@ namespace Tetris
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Timer timer3;
+        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Timer timer4;
+        private System.Windows.Forms.Timer timer5;
     }
 }
 
