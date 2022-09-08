@@ -1,6 +1,6 @@
 ﻿/*
 Tetris
-David Kroupa, I. ročník, 31 st. skupina
+David Kroupa, I. ročník, 31. st. skupina
 letní semestr 2021/22
 Programování 2 NPRG031
 */

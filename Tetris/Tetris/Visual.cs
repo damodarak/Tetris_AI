@@ -1,6 +1,6 @@
 ﻿/*
 Tetris
-David Kroupa, I. ročník, 31 st. skupina
+David Kroupa, I. ročník, 31. st. skupina
 letní semestr 2021/22
 Programování 2 NPRG031
 */
@@ -13,6 +13,8 @@ using System.Drawing;
 
 namespace Tetris
 {
+    //proc nemuze byt tato classa static public???
+
     //staticka trida pro zobrazeni a grafickou ilustraci prubehu hru
     static class Visual
     {
