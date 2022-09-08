@@ -1,3 +1,9 @@
+/*
+Tetris
+David Kroupa, I. roèník, 31 st. skupina
+letní semestr 2021/22
+Programování 2 NPRG031
+*/
 using System;
 using System.Collections.Generic;
 using System.Linq;
