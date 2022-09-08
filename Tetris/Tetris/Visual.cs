@@ -13,8 +13,6 @@ using System.Drawing;
 
 namespace Tetris
 {
-    //proc nemuze byt tato classa static public???
-
     //staticka trida pro zobrazeni a grafickou ilustraci prubehu hru
     static class Visual
     {
