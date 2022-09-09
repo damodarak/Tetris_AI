@@ -232,24 +232,8 @@ namespace Tetris
         }
         private void button1_Click_1(object sender, EventArgs e)
         {
-            wb = false;
-            timer4.Enabled = timer5.Enabled = false;
+            buttonClickIntro();
 
-            if (checkBox1.Checked)
-            {
-                playing = true;
-                player.PlayLooping();
-            }
-
-            timer3.Enabled = false;
-            timer2.Enabled = false;
-            clearLines = new int[5];
-            timer1.Enabled = false;
-            activePiece = GameBoard.GeneratePiece();
-            nextPiece = GameBoard.GeneratePiece();
-            pictureBox1.Invalidate();
-            pictureBox3.Invalidate();
-            gb = new GameBoard();
             updateInfo();
             timer1.Enabled = true;
             gameOver = false;
@@ -257,25 +241,9 @@ namespace Tetris
         //harddrop AI button
         private void button3_Click(object sender, EventArgs e)
         {
-            wb = false;
-            timer4.Enabled = timer5.Enabled = false;
-
-            if (checkBox1.Checked)
-            {
-                playing = true;
-                player.PlayLooping();
-            }
-            
+            buttonClickIntro();
             placeToDropFrom = new int[5, 2];
-            timer1.Enabled = false;
-            timer2.Enabled = false;
-            timer3.Enabled = false;
-            clearLines = new int[5];
-            activePiece = GameBoard.GeneratePiece();
-            nextPiece = GameBoard.GeneratePiece();
-            pictureBox1.Invalidate();
-            pictureBox3.Invalidate();
-            gb = new GameBoard();
+           
             placeToDropFrom = HardDropAI.FindBestPlaceForDrop(ref gb, activePiece);
             updateInfo();
             gameOver = false;
@@ -312,24 +280,7 @@ namespace Tetris
         //improved AI button
         private void button4_Click(object sender, EventArgs e)
         {
-            wb = false;
-            timer4.Enabled = timer5.Enabled = false;
-
-            if (checkBox1.Checked)
-            {
-                playing = true;
-                player.PlayLooping();
-            }
-
-            timer1.Enabled = false;
-            timer2.Enabled = false;
-            timer3.Enabled = false;
-            clearLines = new int[5];
-            activePiece = GameBoard.GeneratePiece();
-            nextPiece = GameBoard.GeneratePiece();
-            pictureBox1.Invalidate();
-            pictureBox3.Invalidate();
-            gb = new GameBoard();
+            buttonClickIntro();
 
             nav = AI.findBestPosition(ref gb, activePiece, nextPiece);
             stepNum = 0;
@@ -389,7 +340,7 @@ namespace Tetris
         //wall breaker play button
         private void button5_Click(object sender, EventArgs e)
         {
-            timer1.Enabled = timer2.Enabled = timer3.Enabled = false;
+            timer1.Enabled = timer2.Enabled = timer3.Enabled = timer4.Enabled = false;
             nextPiece = null;
             activePiece = null;
 
@@ -448,6 +399,24 @@ namespace Tetris
             }
 
             updateWBScore();
+        }
+        //things that need to be done in every buttonClick Event
+        private void buttonClickIntro()
+        {
+            wb = false;
+            timer1.Enabled = timer2.Enabled = timer3.Enabled = timer4.Enabled = timer5.Enabled = false;
+
+            if (checkBox1.Checked)
+            {
+                playing = true;
+                player.PlayLooping();
+            }
+            clearLines = new int[5];
+            activePiece = GameBoard.GeneratePiece();
+            nextPiece = GameBoard.GeneratePiece();
+            pictureBox1.Invalidate();
+            pictureBox3.Invalidate();
+            gb = new GameBoard();
         }
     }
 }
