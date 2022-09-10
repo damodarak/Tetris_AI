@@ -335,9 +335,7 @@ namespace Tetris
 
             char[,] deska = (char[,])gb.Board.Clone();
             GameBoard.markPozice(ref deska, Pozice);//zaznamena pozice
-
-            int[] clearLines = new int[5];
-            GameBoard.FindFullLines(ref deska);//nalezeni plnych radku a nasledne posunuti mapy
+            int[] clearLines = GameBoard.FindFullLines(ref deska);//nalezeni plnych radku a nasledne posunuti mapy
             GameBoard.MoveMap(ref deska, clearLines);//budeme kontrolovat blokovane diry po odstranenych radach
 
             vyskaSloupu = vyskySloupu(ref deska);
