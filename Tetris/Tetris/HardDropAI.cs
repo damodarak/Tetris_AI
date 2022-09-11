@@ -150,19 +150,19 @@ namespace Tetris
             int numOfHoles = 0;//pocet zablokovanych der
             char[,] deska = (char[,])gb.Board.Clone();
 
-            GameBoard.markPozice(ref deska, Pozice);//dosadime do hraci desky umistenou figurku
+            GameBoard.MarkPozice(ref deska, Pozice);//dosadime do hraci desky umistenou figurku
             int[] clearLines = GameBoard.FindFullLines(ref deska);
             GameBoard.MoveMap(ref deska, clearLines);//budeme kontrolovat blokovane diry po odstranenych radach
 
             for (int i = 0; i < 4; i++)
             {
-                if (GameBoard.contains(clearLines, Pozice[i,0]))//pouze v pripade, ze dana pozice nezpusobi vymazani rady
+                if (GameBoard.Contains(clearLines, Pozice[i,0]))//pouze v pripade, ze dana pozice nezpusobi vymazani rady
                 {
                     continue;
                 }
                 q = new Queue();
                 int tempHoles = 0;
-                int posunuti = countPosunuti(clearLines, Pozice[i,0]);
+                int posunuti = CountPosunuti(clearLines, Pozice[i,0]);
 
                 if (Pozice[i, 0] + posunuti < 19 && deska[Pozice[i, 0] + 1 + posunuti, Pozice[i, 1]] == '\0')
                 {
@@ -184,7 +184,7 @@ namespace Tetris
                     }
                     if (tempHoles == 0)
                     {
-                        clearAfterBFS(deska, new int[2] { Pozice[i, 0] + 1 + posunuti, Pozice[i, 1] });
+                        ClearAfterBFS(deska, new int[2] { Pozice[i, 0] + 1 + posunuti, Pozice[i, 1] });
                     }
                     else
                     {
@@ -194,7 +194,7 @@ namespace Tetris
             }
             return numOfHoles;
         }
-        static public void clearAfterBFS(char[,] deska, int[] coord)
+        static public void ClearAfterBFS(char[,] deska, int[] coord)
         {
             //vycistime desku stejnym prohledavanim BFS jako kdyz jsme prohledavali pocet blokovanych der akorat menime naopak chary
             Queue q = new Queue();
@@ -236,7 +236,7 @@ namespace Tetris
                 q.Insert(new int[2] { souradnice[0], souradnice[1] + 1 });
             }
         }
-        static public int checkSoftBlockedHoles(ref GameBoard gb, int[,] Pozice, int hardBlocked)
+        static public int CheckSoftBlockedHoles(ref GameBoard gb, int[,] Pozice, int hardBlocked)
         {
             if (hardBlocked>0)//zajimame se o pripad kdy, nemame hardBlocked diry, protoze kazda hardBlocked je zaroven i softBlocked
             {
@@ -246,17 +246,17 @@ namespace Tetris
             char[,] deska = (char[,])gb.Board.Clone();
             int[,] clonePozice = (int[,])Pozice.Clone();
 
-            GameBoard.markPozice(ref deska, clonePozice);
+            GameBoard.MarkPozice(ref deska, clonePozice);
             int[] clearLines = GameBoard.FindFullLines(ref deska);
             GameBoard.MoveMap(ref deska, clearLines);//budeme kontrolovat blokovane diry po odstranenych radach
 
             for (int i = 0; i < 4; i++)
             {
-                if (GameBoard.contains(clearLines, Pozice[i, 0]))//pouze v pripade, ze dana pozice nezpusobi vymazani rady
+                if (GameBoard.Contains(clearLines, Pozice[i, 0]))//pouze v pripade, ze dana pozice nezpusobi vymazani rady
                 {
                     continue;
                 }
-                int posunuti = countPosunuti(clearLines, clonePozice[i,0]);
+                int posunuti = CountPosunuti(clearLines, clonePozice[i,0]);
 
                 //hledame softBlocked diry svisle dolu od souradnic bloku (i v pripade posunuti)
                 while (clonePozice[i, 0] + 1 + posunuti <= 19 && deska[clonePozice[i, 0] + 1 + posunuti, clonePozice[i, 1]] == '\0')
@@ -268,22 +268,22 @@ namespace Tetris
             return numOfSoftHoles;
         }
         //vrati rozdil vysky hraci desky a nejvyssi pozic po vymazani a posunuti TetroBlocku v pripade plnych radku
-        static public int checkHeightDiff(ref GameBoard gb, int[,] Pozice)
+        static public int CheckHeightDiff(ref GameBoard gb, int[,] Pozice)
         {
             int height = boardHeight(ref gb);
             int heighestBlock = 0;
             GameBoard gbnew = gb.Copy();
-            GameBoard.markPozice(ref gbnew.Board, Pozice);
+            GameBoard.MarkPozice(ref gbnew.Board, Pozice);
             int[] clearLines = GameBoard.FindFullLines(ref gbnew.Board);
 
             for (int i = 0; i < 4; i++)
             {
-                if (GameBoard.contains(clearLines, Pozice[i, 0]))
+                if (GameBoard.Contains(clearLines, Pozice[i, 0]))
                 {
                     continue;
                 }
 
-                int posunuti = countPosunuti(clearLines, Pozice[i,0]);
+                int posunuti = CountPosunuti(clearLines, Pozice[i,0]);
 
                 if ((20 - Pozice[i, 0] - posunuti) > heighestBlock)
                 {
@@ -297,14 +297,14 @@ namespace Tetris
         static private int boardHeight(ref GameBoard gb)
         {
             int lineNum = 2;
-            while (lineNum <= 19 && checkLineClear(ref gb.Board, lineNum))//nalezeni prvniho radku, ktery neni prazdny (radek plny '\0')
+            while (lineNum <= 19 && CheckLineClear(ref gb.Board, lineNum))//nalezeni prvniho radku, ktery neni prazdny (radek plny '\0')
             {
                 ++lineNum;
             }
             int boardHeight = 20 - lineNum;//hraci deska je reprezentovana opacne...nejvyssi pole maji nejnizsi indexy
             return boardHeight;
         }
-        static public bool checkLineClear(ref char[,] deska, int lineNum)
+        static public bool CheckLineClear(ref char[,] deska, int lineNum)
         {
             for (int i = 0; i < 10; i++)
             {
@@ -316,15 +316,15 @@ namespace Tetris
             return true;
         }
         //vrati pocet naplnenych rad po zasazeni figurky do pole
-        static public int checkFullLines(ref GameBoard gb, int[,] Pozice)
+        static public int CheckFullLines(ref GameBoard gb, int[,] Pozice)
         {
             //funkce vrati pocet plnych rad po zapsani int[] Pozice
             char[,] deska = (char[,])gb.Board.Clone();
-            GameBoard.markPozice(ref deska, Pozice);
+            GameBoard.MarkPozice(ref deska, Pozice);
             int fullLines = GameBoard.FindFullLines(ref deska)[4];//prvek na pozici [4] urcuje pocet plnych radku
             return fullLines;
         }
-        static public int deltaHrbolatosti(ref GameBoard gb, int[,] Pozice)
+        static public int DeltaHrbolatosti(ref GameBoard gb, int[,] Pozice)
         {
             int[] vyskaSloupu = vyskySloupu(ref gb.Board);          
             int hrbolatostPred = 0;
@@ -334,7 +334,7 @@ namespace Tetris
             }
 
             char[,] deska = (char[,])gb.Board.Clone();
-            GameBoard.markPozice(ref deska, Pozice);//zaznamena pozice
+            GameBoard.MarkPozice(ref deska, Pozice);//zaznamena pozice
             int[] clearLines = GameBoard.FindFullLines(ref deska);//nalezeni plnych radku a nasledne posunuti mapy
             GameBoard.MoveMap(ref deska, clearLines);//budeme kontrolovat blokovane diry po odstranenych radach
 
@@ -380,13 +380,14 @@ namespace Tetris
 
                 //data for decision
                 int hardBlocked = checkBlockedHoles(ref gb, tempDrop);
-                int softBlocked = checkSoftBlockedHoles(ref gb, tempDrop, hardBlocked);
-                int diff = checkHeightDiff(ref gb, tempDrop);
-                int numLines = checkFullLines(ref gb, tempDrop);
-                int hrbolatost = deltaHrbolatosti(ref gb, tempDrop);
+                int softBlocked = CheckSoftBlockedHoles(ref gb, tempDrop, hardBlocked);
+                int diff = CheckHeightDiff(ref gb, tempDrop);
+                int numLines = CheckFullLines(ref gb, tempDrop);
+                int hrbolatost = DeltaHrbolatosti(ref gb, tempDrop);
+                int emptyPillars = DeltaEmptyPillars(ref gb.Board, tempDrop);
 
                 //calculating score
-                int tempScore = hardBlocked * 9 + softBlocked * 7 + diff * 5 - numLines * 3 + hrbolatost / 4;
+                int tempScore = hardBlocked * 9 + softBlocked * 7 + diff * 5 - numLines * 3 + hrbolatost / 4 + emptyPillars * 10;
                 if (numLines>2)//zrejme dobry tah, tim padem pristupujeme k orezavani
                 {
                     bestDrop = tempDrop;
@@ -497,7 +498,7 @@ namespace Tetris
             }
         }
         //funkce pouzivana v pripadech, kde muze dojit k posunuti hraci desky po zasazeni figurky do hraci desky
-        static public int countPosunuti(int[] clearLines, int line)
+        static public int CountPosunuti(int[] clearLines, int line)
         {
             int posunuti = 0;
             for (int j = 0; j < clearLines[4]; j++)
@@ -508,6 +509,42 @@ namespace Tetris
                 }
             }
             return posunuti;
+        }
+        static public int DeltaEmptyPillars(ref char[,] deska, int[,] Pozice)
+        {
+            int[] sloupce = vyskySloupu(ref deska);
+            int emptyPillarsBefore = emptyPillars(sloupce);
+
+            char[,] deskaNew = (char[,])deska.Clone();
+            GameBoard.MarkPozice(ref deskaNew, Pozice);//zaznamena pozice
+            int[] clearLines = GameBoard.FindFullLines(ref deskaNew);//nalezeni plnych radku a nasledne posunuti mapy
+            GameBoard.MoveMap(ref deskaNew, clearLines);//budeme kontrolovat blokovane diry po odstranenych radach
+
+            sloupce = vyskySloupu(ref deskaNew);
+            int emptyPillarsAfter = emptyPillars(sloupce);
+
+            return emptyPillarsAfter - emptyPillarsBefore;
+
+        }
+        static private int emptyPillars(int[] pillars)
+        {
+            int konec = 0;
+            for (int i = 1; i < 9; i++)//testujeme vnitrni sloupce
+            {
+                if (Math.Abs(pillars[i-1] - pillars[i])>3 && Math.Abs(pillars[i] - pillars[i+1])>3)
+                {
+                    konec++;
+                }
+            }
+            if (pillars[1]-pillars[0]>3)//testujeme vnejsi
+            {
+                konec++;
+            }
+            if (pillars[8]-pillars[9]>3)
+            {
+                konec++;
+            }
+            return konec;
         }
     }
 }

@@ -18,19 +18,19 @@ namespace Tetris
         public char[,] Board;
         public int Hrac;
         public int[] Strela;
-        public bool reload;
-        public int level;
-        public int score;
-        public bool gameover;
+        public bool Reload;
+        public int Level;
+        public int Score;
+        public bool GameOver;
         public WallBreaker()
         {
             Board = new char[18, 10];
             Hrac = 4;
             Strela = new int[2] { -1, -1 };
-            reload = false;
-            level = 1;
-            score = 0;
-            gameover = false;
+            Reload = false;
+            Level = 1;
+            Score = 0;
+            GameOver = false;
         }
         private char[] GenerateLine()
         {
@@ -75,7 +75,7 @@ namespace Tetris
         }
         public bool MoveMap()
         {
-            if (!HardDropAI.checkLineClear(ref this.Board, 16))
+            if (!HardDropAI.CheckLineClear(ref this.Board, 16))
             {
                 return false;
             }
@@ -112,18 +112,18 @@ namespace Tetris
         }
         public void Shoot()
         {
-            if (!reload)
+            if (!Reload)
             {
                 Strela[0] = 16;
                 Strela[1] = Hrac;
-                reload = true;
+                Reload = true;
             }
         }
         public bool Hit()
         {
             if (Strela[0]<0)
             {
-                reload = false;
+                Reload = false;
                 Strela[0] = -1;
                 Strela[1] = -1;             
                 return false;
@@ -136,16 +136,16 @@ namespace Tetris
         }
         public void DelHitBlock()
         {
-            score++;
-            level = (score / 20) + 1;
-            reload = false;
+            Score++;
+            Level = (Score / 20) + 1;
+            Reload = false;
             this.Board[Strela[0], Strela[1]] = '\0';
             Strela[0] = -1;
             Strela[1] = -1;
         }
         public int GameSpeed()
         {
-            return 1000 - (level - 1) * 30;
+            return 1000 - (Level - 1) * 30;
         }
     }
 }

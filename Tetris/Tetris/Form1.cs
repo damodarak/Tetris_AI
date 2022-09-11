@@ -58,7 +58,7 @@ namespace Tetris
         //prepsani virtualni funkce ProcessCmdKey, protoze KeyDown Event naprosto a nijak nefunguje
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            if (wb && !wbgame.gameover)
+            if (wb && !wbgame.GameOver)
             {
                 switch (keyData)
                 {
@@ -193,7 +193,7 @@ namespace Tetris
             else if (wb)
             {
                 Visual.DrawWB(ref wbgame, e.Graphics, tuzka);
-                if (wbgame.gameover)
+                if (wbgame.GameOver)
                 {
                     e.Graphics.DrawImage(Properties.Resources.gover, 0, 150, 352, 200);
                 }
@@ -282,7 +282,7 @@ namespace Tetris
         {
             buttonClickIntro();
 
-            nav = AI.findBestPosition(ref gb, activePiece, nextPiece);
+            nav = AI.FindBestPosition(ref gb, activePiece, nextPiece);
             stepNum = 0;
 
             updateInfo();
@@ -312,7 +312,7 @@ namespace Tetris
                     GameBoard.MoveMap(ref gb.Board, clearLines);
                     activePiece = nextPiece;
                     nextPiece = GameBoard.GeneratePiece();
-                    nav = AI.findBestPosition(ref gb, activePiece, nextPiece);
+                    nav = AI.FindBestPosition(ref gb, activePiece, nextPiece);
                     stepNum = 0;
                     updateInfo();
                 }                
@@ -357,8 +357,8 @@ namespace Tetris
         }
         private void updateWBScore()
         {
-            label4.Text = wbgame.level.ToString();
-            label5.Text = wbgame.score.ToString();
+            label4.Text = wbgame.Level.ToString();
+            label5.Text = wbgame.Score.ToString();
             timer4.Interval = wbgame.GameSpeed();
         }
         //wall breaker tick
@@ -373,7 +373,7 @@ namespace Tetris
             else if(!wbgame.MoveMap())
             {
                 timer4.Enabled = false;
-                wbgame.gameover = true;
+                wbgame.GameOver = true;
             }
 
             updateWBScore();
@@ -383,7 +383,7 @@ namespace Tetris
         {
             pictureBox1.Invalidate();
 
-            if (!wbgame.reload)
+            if (!wbgame.Reload)
             {
                 timer5.Enabled = false;
             }
@@ -391,7 +391,7 @@ namespace Tetris
             {
                 wbgame.DelHitBlock();
                 timer5.Enabled = false;
-                wbgame.reload = false;
+                wbgame.Reload = false;
             }
             else
             {

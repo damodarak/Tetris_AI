@@ -159,7 +159,7 @@ namespace Tetris
             }
             return konec;
         }
-        static public bool contains(int[] kde, int co)
+        static public bool Contains(int[] kde, int co)
         {
             //zjistime, zda prvek co se nachazi v poli kde
             for (int i = 0; i < 4; i++)
@@ -200,7 +200,7 @@ namespace Tetris
                 }
             }
         }
-        static public void markPozice(ref char[,] deska, int[,] Pozice)
+        static public void MarkPozice(ref char[,] deska, int[,] Pozice)
         {
             //oznackovani pozice
             for (int i = 0; i < 4; i++)

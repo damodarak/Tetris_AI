@@ -28,19 +28,19 @@ namespace Tetris
                 if (fromWhere != 'L' && shp.MoveLeft(ref gb))
                 {                   
                     tetrisDFS(ref gb, shp, st, navigace + 'L', 'R');//prichazim zprava
-                    shp.markVisited(ref gb);
+                    shp.MarkVisited(ref gb);
                     shp.MoveRight(ref gb);
                 }
                 if (shp.MoveDown(ref gb))
                 {
                     tetrisDFS(ref gb, shp, st, navigace + 'D', 'H');//prichazim sHora
-                    shp.markVisited(ref gb);
+                    shp.MarkVisited(ref gb);
                     shp.MoveUp();
                 }
                 if (fromWhere != 'R' && shp.MoveRight(ref gb))
                 {
                     tetrisDFS(ref gb, shp, st, navigace + 'R', 'L');
-                    shp.markVisited(ref gb);
+                    shp.MarkVisited(ref gb);
                     shp.MoveLeft(ref gb);
                 }               
             }
@@ -71,7 +71,7 @@ namespace Tetris
                     positions.Insert(ib);
                 }
 
-                if (Shape.checkLeftSide(ref gb, ib.ArrayValue))
+                if (Shape.CheckLeftSide(ref gb, ib.ArrayValue))
                 {
                     int[,] insert = new int[4, 2];
                     for (int i = 0; i < 4; i++)
@@ -82,7 +82,7 @@ namespace Tetris
                     qp.Insert(insert, ib.StringValue + 'L');//k navigaci pridame krok doleva
                     markVisited(ref gb, insert);//zaznamename, ze jsme jiz v teto pozici byli
                 }
-                if (Shape.checkRightSide(ref gb, ib.ArrayValue))
+                if (Shape.CheckRightSide(ref gb, ib.ArrayValue))
                 {
                     int[,] insert = new int[4, 2];
                     for (int i = 0; i < 4; i++)
@@ -93,7 +93,7 @@ namespace Tetris
                     qp.Insert(insert, ib.StringValue + 'R');
                     markVisited(ref gb, insert);
                 }
-                if (Shape.checkDownSide(ref gb, ib.ArrayValue))
+                if (Shape.CheckDownSide(ref gb, ib.ArrayValue))
                 {
                     int[,] insert = new int[4, 2];
                     for (int i = 0; i < 4; i++)
@@ -128,7 +128,7 @@ namespace Tetris
                 }
             }
         }
-        static public string findBestPosition(ref GameBoard gb, Shape active, Shape next)
+        static public string FindBestPosition(ref GameBoard gb, Shape active, Shape next)
         {
             QueuePozic movesFirst = new QueuePozic();
             QueuePozic movesSecond = new QueuePozic();
@@ -145,7 +145,7 @@ namespace Tetris
                 int tempScore = calculateScore(ref gb, tempDrop1);
 
                 GameBoard gbnew = gb.Copy();
-                GameBoard.markPozice(ref gbnew.Board, tempDrop1.ArrayValue);
+                GameBoard.MarkPozice(ref gbnew.Board, tempDrop1.ArrayValue);
                 int[] clearLines = gbnew.FindFullLines();
                 GameBoard.ClearLines(ref gbnew, clearLines);
                 GameBoard.MoveMap(ref gbnew.Board, clearLines);
@@ -184,12 +184,13 @@ namespace Tetris
         {
             //data for decision
             int hardBlocked = checkBlockedHoles(ref gb, tempDrop.ArrayValue);//tato funkce je prepsana, protoze nas zajima detailnejsi vysledek
-            int softBlocked = HardDropAI.checkSoftBlockedHoles(ref gb, tempDrop.ArrayValue, hardBlocked);
-            int diff = HardDropAI.checkHeightDiff(ref gb, tempDrop.ArrayValue);
-            int numLines = HardDropAI.checkFullLines(ref gb, tempDrop.ArrayValue);
-            int hrbolatost = HardDropAI.deltaHrbolatosti(ref gb, tempDrop.ArrayValue);
+            int softBlocked = HardDropAI.CheckSoftBlockedHoles(ref gb, tempDrop.ArrayValue, hardBlocked);
+            int diff = HardDropAI.CheckHeightDiff(ref gb, tempDrop.ArrayValue);
+            int numLines = HardDropAI.CheckFullLines(ref gb, tempDrop.ArrayValue);
+            int hrbolatost = HardDropAI.DeltaHrbolatosti(ref gb, tempDrop.ArrayValue);
+            int emptyPillars = HardDropAI.DeltaEmptyPillars(ref gb.Board, tempDrop.ArrayValue);
 
-            int tempScore = hardBlocked * 9 + softBlocked * 7 + diff * 5 - numLines * 3 + hrbolatost / 4;
+            int tempScore = hardBlocked * 9 + softBlocked * 7 + diff * 5 - numLines * 3 + hrbolatost / 4 + emptyPillars * 10;
             return tempScore;
         }
         static private int checkBlockedHoles(ref GameBoard gb, int[,] Pozice)
@@ -198,13 +199,13 @@ namespace Tetris
             int numOfHoles = 0;//pocet zablokovanych der
             char[,] deska = (char[,])gb.Board.Clone();
 
-            GameBoard.markPozice(ref deska, Pozice);//dosadime do hraci desky umistenou figurku
+            GameBoard.MarkPozice(ref deska, Pozice);//dosadime do hraci desky umistenou figurku
             int[] clearLines = GameBoard.FindFullLines(ref deska);
             GameBoard.MoveMap(ref deska, clearLines);//budeme kontrolovat blokovane diry po odstranenych radach
 
             for (int i = 0; i < 4; i++)
             {
-                if (GameBoard.contains(clearLines, Pozice[i, 0]))
+                if (GameBoard.Contains(clearLines, Pozice[i, 0]))
                 {
                     continue;
                 }
@@ -238,7 +239,7 @@ namespace Tetris
                     }
                     if (tempHoles == 0)
                     {
-                        HardDropAI.clearAfterBFS(deska, new int[2] { Pozice[i, 0] + 1 + posunuti, Pozice[i, 1] });
+                        HardDropAI.ClearAfterBFS(deska, new int[2] { Pozice[i, 0] + 1 + posunuti, Pozice[i, 1] });
                     }
                     else
                     {
@@ -268,7 +269,7 @@ namespace Tetris
                     }
                     if (tempHoles == 0)
                     {
-                        HardDropAI.clearAfterBFS(deska, new int[2] { Pozice[i, 0] + posunuti, Pozice[i, 1] - 1 });
+                        HardDropAI.ClearAfterBFS(deska, new int[2] { Pozice[i, 0] + posunuti, Pozice[i, 1] - 1 });
                     }
                     else
                     {
@@ -298,7 +299,7 @@ namespace Tetris
                     }
                     if (tempHoles == 0)
                     {
-                        HardDropAI.clearAfterBFS(deska, new int[2] { Pozice[i, 0] + posunuti, Pozice[i, 1] + 1 });
+                        HardDropAI.ClearAfterBFS(deska, new int[2] { Pozice[i, 0] + posunuti, Pozice[i, 1] + 1 });
                     }
                     else
                     {

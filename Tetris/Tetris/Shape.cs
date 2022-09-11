@@ -55,7 +55,7 @@ namespace Tetris
         }
         //dalsi 3 funkce jsou totozne, jako predchozi 3 s rozdilem, ze int[,] Pozice je dana jako parametr a ne jako atribut Shape tridy
         //take to povoluje,aby v hracim poli bylo policko obsazeno charem 'F', coz symbolizue dFs prohledavani, avsak nesmi to byt obsazene 'F' cele
-        static public bool checkDownSide(ref GameBoard gb, int[,] Pozice)
+        static public bool CheckDownSide(ref GameBoard gb, int[,] Pozice)
         {
             //'\0' je prazdne misto, 'F' je char oznacujici jiz projdenou pozici pri tetrisDFS nebo tetrisBFS
             return (
@@ -68,7 +68,7 @@ namespace Tetris
                 (gb.Board[Pozice[2, 0] + 1, Pozice[2, 1]] == '\0' || gb.Board[Pozice[2, 0] + 1, Pozice[2, 1]] == 'F') &&
                 (gb.Board[Pozice[3, 0] + 1, Pozice[3, 1]] == '\0' || gb.Board[Pozice[3, 0] + 1, Pozice[3, 1]] == 'F'));
         }
-        static public bool checkLeftSide(ref GameBoard gb, int[,] Pozice)
+        static public bool CheckLeftSide(ref GameBoard gb, int[,] Pozice)
         {
             //'\0' je prazdne misto, 'F' je char oznacujici jiz projdenou pozici pri tetrisDFS nebo tetrisBFS
             return (
@@ -82,7 +82,7 @@ namespace Tetris
                 (gb.Board[Pozice[3, 0], Pozice[3, 1] - 1] == '\0' || gb.Board[Pozice[3, 0], Pozice[3, 1] - 1] == 'F'));
 
         }
-        static public bool checkRightSide(ref GameBoard gb, int[,] Pozice)
+        static public bool CheckRightSide(ref GameBoard gb, int[,] Pozice)
         {
             //'\0' je prazdne misto, 'F' je char oznacujici jiz projdenou pozici pri tetrisDFS nebo tetrisBFS
             return (
@@ -133,7 +133,7 @@ namespace Tetris
             return poziceAI;
         }
         //oznaceni jiz navstiveneho mista v desce
-        public void markVisited(ref GameBoard gb)
+        public void MarkVisited(ref GameBoard gb)
         {
             for (int i = 0; i < 4; i++)
             {
