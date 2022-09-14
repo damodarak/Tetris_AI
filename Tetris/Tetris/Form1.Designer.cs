@@ -157,7 +157,7 @@ namespace Tetris
             this.label5.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label5.Location = new System.Drawing.Point(741, 290);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(141, 33);
+            this.label5.Size = new System.Drawing.Size(146, 33);
             this.label5.TabIndex = 9;
             this.label5.Text = "0";
             // 
@@ -190,7 +190,7 @@ namespace Tetris
             this.checkBox1.AutoSize = true;
             this.checkBox1.Location = new System.Drawing.Point(642, 391);
             this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(59, 19);
+            this.checkBox1.Size = new System.Drawing.Size(71, 24);
             this.checkBox1.TabIndex = 22;
             this.checkBox1.Text = "sound";
             this.checkBox1.UseVisualStyleBackColor = true;
@@ -234,7 +234,7 @@ namespace Tetris
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
-            this.ClientSize = new System.Drawing.Size(894, 707);
+            this.ClientSize = new System.Drawing.Size(892, 699);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.checkBox1);
